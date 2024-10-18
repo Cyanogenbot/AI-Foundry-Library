@@ -10,7 +10,7 @@ This library was developed by Jort Wiersma, coached by Mathias Funk, at the Depa
 
 ## How to install
 
-First, dowload the library (choose either the regular or the minified version). Then, place the file inside of the folder where you HTML file is hosted. Inside of your HTML file, in the head element, create a script-tag that refers to the library file. E.g. <script src=./AI_Foundry_Library.js></script>
+First, dowload the library (choose either the regular or the minified version). Then, place the file inside of the folder where you HTML file is hosted. Inside of your HTML file, in the head element, create a script-tag that refers to the library file. E.g. <script src="./AI_Foundry_Library.js"></script>
 
 ## How to use
 
@@ -81,3 +81,9 @@ Function to make requests to sound-to-text models. Three types are available: fi
 - resultElementId: ID of HTML element that will be used to place AI response in
 - noLogging: (default = false)
 - stopRec: (default = false) If audio is being recorded, pass the same function with stopRec set to true to stop the recording.
+
+### Variables
+
+#### foundry.messageHistory
+
+The message history can be accessed through the foundry.messageHistory variable. This can be used for more complex cases such as automatic chat summarization.
