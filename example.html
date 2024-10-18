@@ -1,0 +1,63 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Foundry Library Example</title>
+
+    <!-- Add PicoCSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+    <!-- Add AI Foundry Library -->
+    <script src="./AI-Foundry-Library.min.js"></script>
+  </head>
+  <body>
+    <h1>
+      Make sure you edit this file to include your own Data Foundry API Key!
+    </h1>
+    <h3>Open the console for more details.</h3>
+
+    <!-- Add button to run our example function -->
+    <button onclick="example()">Test AI Foundry</button>
+
+    <div id="textRes">
+      AI Text Results will be placed here. Image results will be placed below.
+    </div>
+    <img id="imageRes" src="" alt="" />
+
+    <!-- Add javaScript -->
+    <script>
+      //Add HTML elements
+      const textRes = document.getElementById("textRes");
+      const imageRes = document.getElementById("imageRes");
+
+      //Create example function
+      async function example() {
+        //Ask user to upload image, then describe the image
+        let result1 = await foundry.imageToText({
+          inputKey: "df-abcde...=",
+          popup: true,
+          userPrompt: "describe this image",
+          resultElementId: "textRes",
+        });
+
+        //Create a new prompt that asks to make the previous image description happier
+        let newPrompt = "Make this text happier: " + result1;
+
+        //Send new prompt to AI
+        let result2 = await foundry.textToText({
+          inputKey: "df-abcde...=",
+          userPrompt: newPrompt,
+          resultElementId: "textRes",
+        });
+
+        //Use the new (happier) image description to generate a new image
+        let result3 = await foundry.textToImage({
+          inputKey: "df-abcde...=",
+          userPrompt: result2,
+          resultElementId: "imageRes",
+        });
+      }
+    </script>
+  </body>
+</html>
