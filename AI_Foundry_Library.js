@@ -61,9 +61,13 @@ const foundry = {
     try {
       //Start the loading indicator
       if (loadingIndicatorId) {
-        document
-          .getElementById(loadingIndicatorId)
-          .setAttribute("aria-busy", "true");
+        if (document.getElementById(loadingIndicatorId)) {
+          document
+            .getElementById(loadingIndicatorId)
+            .setAttribute("aria-busy", "true");
+        } else {
+          console.error("Element selected for loading indicator not found");
+        }
       }
       //Send messages to LocalAI
       const response = await fetch(
@@ -107,9 +111,13 @@ const foundry = {
 
       //Stop loading indicator
       if (loadingIndicatorId) {
-        document
-          .getElementById(loadingIndicatorId)
-          .setAttribute("aria-busy", "false");
+        if (document.getElementById(loadingIndicatorId)) {
+          document
+            .getElementById(loadingIndicatorId)
+            .setAttribute("aria-busy", "false");
+        } else {
+          console.error("Element selected for loading indicator not found");
+        }
       }
 
       if (rememberMessages) {
@@ -154,9 +162,13 @@ const foundry = {
     try {
       //add loading indicator
       if (loadingIndicatorId) {
-        document
-          .getElementById(loadingIndicatorId)
-          .setAttribute("aria-busy", "true");
+        if (document.getElementById(loadingIndicatorId)) {
+          document
+            .getElementById(loadingIndicatorId)
+            .setAttribute("aria-busy", "true");
+        } else {
+          console.error("Element selected for loading indicator not found");
+        }
       }
 
       //Make AI request
@@ -184,7 +196,7 @@ const foundry = {
 
       const data = await response.json();
       if (!noLogging) {
-        console.log('Generated image:', data["image_url"]);
+        console.log("Generated image:", data["image_url"]);
       }
 
       //If a result element has been provided (which should be an <img> element, place the result)
@@ -194,9 +206,13 @@ const foundry = {
 
       //Stop loading indicator
       if (loadingIndicatorId) {
-        document
-          .getElementById(loadingIndicatorId)
-          .setAttribute("aria-busy", "false");
+        if (document.getElementById(loadingIndicatorId)) {
+          document
+            .getElementById(loadingIndicatorId)
+            .setAttribute("aria-busy", "false");
+        } else {
+          console.error("Element selected for loading indicator not found");
+        }
       }
 
       //return the result
@@ -247,7 +263,6 @@ const foundry = {
       try {
         //Wait for the file selection and image processing result
         image = await df_waitForFileSelection(noLogging);
-
       } catch (error) {
         console.error("Error:", error.message);
       }
@@ -274,9 +289,13 @@ const foundry = {
     try {
       //Start the loading indicator
       if (loadingIndicatorId) {
-        document
-          .getElementById(loadingIndicatorId)
-          .setAttribute("aria-busy", "true");
+        if (document.getElementById(loadingIndicatorId)) {
+          document
+            .getElementById(loadingIndicatorId)
+            .setAttribute("aria-busy", "true");
+        } else {
+          console.error("Element selected for loading indicator not found");
+        }
       }
       //Send messages to LocalAI
       const response = await fetch(
@@ -321,9 +340,13 @@ const foundry = {
 
       //Stop loading indicator
       if (loadingIndicatorId) {
-        document
-          .getElementById(loadingIndicatorId)
-          .setAttribute("aria-busy", "false");
+        if (document.getElementById(loadingIndicatorId)) {
+          document
+            .getElementById(loadingIndicatorId)
+            .setAttribute("aria-busy", "false");
+        } else {
+          console.error("Element selected for loading indicator not found");
+        }
       }
 
       //Return the AI response
@@ -442,7 +465,7 @@ const foundry = {
         // Get the data URL
         const processedImage = canvas.toDataURL("image/jpeg", 0.5); //0.5 reduces image quality to decrease the prompt length
         if (!noLogging) {
-          console.log('Image processed.');
+          console.log("Image processed.");
         }
         resolve(processedImage);
       });
@@ -586,9 +609,13 @@ const foundry = {
       try {
         //Add loading indicator
         if (loadingIndicatorId) {
-          document
-            .getElementById(loadingIndicatorId)
-            .setAttribute("aria-busy", "true");
+          if (document.getElementById(loadingIndicatorId)) {
+            document
+              .getElementById(loadingIndicatorId)
+              .setAttribute("aria-busy", "true");
+          } else {
+            console.error("Element selected for loading indicator not found");
+          }
         }
         //Make request
         const response = await fetch(
@@ -609,9 +636,13 @@ const foundry = {
 
         //Remove loading indicator
         if (loadingIndicatorId) {
-          document
-            .getElementById(loadingIndicatorId)
-            .setAttribute("aria-busy", "false");
+          if (document.getElementById(loadingIndicatorId)) {
+            document
+              .getElementById(loadingIndicatorId)
+              .setAttribute("aria-busy", "false");
+          } else {
+            console.error("Element selected for loading indicator not found");
+          }
         }
 
         //return result
