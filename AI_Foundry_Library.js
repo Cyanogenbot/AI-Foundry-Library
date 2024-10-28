@@ -224,8 +224,63 @@ const foundry = {
       );
     }
   },
-  textToSound: function () {
-    console.log("Text to sound is currently not supported.");
+  textToSound: async function ({
+    apiKey,
+    projectId,
+    input,
+    language = "en",
+    noLogging,
+  }) {
+    if (!apiKey) {
+      //Do not run the function when no API key has been provided
+      console.error("No API key provided.");
+      return;
+    }
+
+    if (!projectId) {
+      //Do not run the function when no project ID has been provided
+      console.error(
+        "No project ID provided. Please find your project ID at the info section of your project."
+      );
+      return;
+    }
+
+    if (!noLogging) {
+      console.log("Running text-to-sound function");
+    }
+
+    try {
+      const response = await fetch(
+        `https://data.id.tue.nl/api/vendor/t2s/${projectId}`,
+        {
+          method: "POST",
+          cache: "no-cache",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`,
+          },
+          referrerPolicy: "no-referrer",
+          body: JSON.stringify({
+            api_token: apiKey,
+            lang: language,
+            text: input,
+          }),
+        }
+      );
+      const json = await response.json();
+      const audioLink = "https://data.id.tue.nl/api/vendor/t2s/" + json.text;
+      if (!noLogging) {
+        console.log("Generated audio:", audioLink);
+      }
+      if (json.text === undefined) {
+        console.error(
+          "No result. It is possible your API Key and project ID are not matching."
+        );
+      }
+      return audioLink;
+    } catch (err) {
+      console.error(err);
+    }
   },
   imageToText: async function ({
     apiKey,
