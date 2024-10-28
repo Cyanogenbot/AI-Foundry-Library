@@ -98,4 +98,4 @@ Function to retreive the available models to choose from. Parameters are not pla
 
 #### foundry.messageHistory
 
-The message history can be accessed through the foundry.messageHistory variable. This can be used for more complex cases such as automatic chat summarization.
+The message history can be accessed through the `foundry.messageHistory` variable. This can be used for more complex cases such as automatic chat summarization.
