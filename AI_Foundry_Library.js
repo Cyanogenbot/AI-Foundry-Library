@@ -229,6 +229,8 @@ const foundry = {
     projectId,
     input,
     language = "en",
+    loadingIndicatorId,
+    resultElementId,
     noLogging,
   }) {
     if (!apiKey) {
@@ -247,6 +249,16 @@ const foundry = {
 
     if (!noLogging) {
       console.log("Running text-to-sound function");
+    }
+
+    if (loadingIndicatorId) {
+      if (document.getElementById(loadingIndicatorId)) {
+        document
+          .getElementById(loadingIndicatorId)
+          .setAttribute("aria-busy", "true");
+      } else {
+        console.error("Element selected for loading indicator not found");
+      }
     }
 
     try {
@@ -277,6 +289,19 @@ const foundry = {
           "No result. It is possible your API Key and project ID are not matching."
         );
       }
+      if (loadingIndicatorId) {
+        if (document.getElementById(loadingIndicatorId)) {
+          document
+            .getElementById(loadingIndicatorId)
+            .setAttribute("aria-busy", "false");
+        } else {
+          console.error("Element selected for loading indicator not found");
+        }
+      }
+      if (resultElementId) {
+        document.getElementById(resultElementId).src = audioLink;
+      }
+
       return audioLink;
     } catch (err) {
       console.error(err);
