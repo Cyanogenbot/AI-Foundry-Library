@@ -1,6 +1,6 @@
 const foundry = {
   textToText: async function ({
-    inputKey,
+    apiKey,
     model = "hermes-2-pro-llama-3-8b",
     userPrompt,
     systemPrompt,
@@ -11,7 +11,7 @@ const foundry = {
     loadingIndicatorId,
     resultElementId,
   }) {
-    if (!inputKey) {
+    if (!apiKey) {
       //Do not run the function when no API key is given
       console.error("No API key provided.");
       return;
@@ -80,12 +80,11 @@ const foundry = {
           headers: {
             "Content-Type": "application/json",
             "User-Agent": "curl/8.7.1",
-            Authorization: `Bearer ${inputKey}`,
+            Authorization: `Bearer ${apiKey}`,
           },
           referrerPolicy: "no-referrer",
           body: JSON.stringify({
-            key: "value",
-            api_token: inputKey,
+            api_token: apiKey,
             task: "chat",
             messages: messages,
             model: model,
@@ -140,7 +139,7 @@ const foundry = {
     }
   },
   textToImage: async function ({
-    inputKey,
+    apiKey,
     userPrompt,
     temperature = 0.9,
     noLogging,
@@ -154,7 +153,7 @@ const foundry = {
       console.log("Running text-to-image function");
     }
     //Do not run the function when no API key is given
-    if (!inputKey) {
+    if (!apiKey) {
       console.error("No API key provided.");
       return;
     }
@@ -176,9 +175,10 @@ const foundry = {
         "https://data.id.tue.nl/v1/images/generations",
         {
           method: "POST",
+
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${inputKey}`,
+            Authorization: `Bearer ${apiKey}`,
           },
           body: JSON.stringify({
             prompt: userPrompt,
@@ -228,7 +228,7 @@ const foundry = {
     console.log("Text to sound is currently not supported.");
   },
   imageToText: async function ({
-    inputKey,
+    apiKey,
     model = "llava-llama-3-8b-v1_1",
     userPrompt,
     systemPrompt,
@@ -240,7 +240,7 @@ const foundry = {
     loadingIndicatorId,
     resultElementId,
   }) {
-    if (!inputKey) {
+    if (!apiKey) {
       //Do not run the function when no API key has been provided
       console.error("No API key provided.");
       return;
@@ -308,12 +308,12 @@ const foundry = {
           headers: {
             "Content-Type": "application/json",
             "User-Agent": "curl/8.7.1",
-            Authorization: `Bearer ${inputKey}`,
+            Authorization: `Bearer ${apiKey}`,
           },
           referrerPolicy: "no-referrer",
           body: JSON.stringify({
             key: "value",
-            api_token: inputKey,
+            api_token: apiKey,
             task: "chat",
             messages: messages,
             model: model,
@@ -472,7 +472,7 @@ const foundry = {
     }
   },
   soundToText: async function ({
-    inputKey,
+    apiKey,
     type = "file", //'file' or 'record' or 'popup'
     sliceDuration = 5000, //miliseconds
     file, //The audio file that needs to be transcribed
@@ -481,7 +481,7 @@ const foundry = {
     noLogging, //Set to true to remove console logging
     stopRec = false, //In order to stop the recording, pass isRecording = true
   }) {
-    if (!inputKey) {
+    if (!apiKey) {
       //Do not run the function when no API key has been provided
       console.error("No API key provided.");
       return;
@@ -515,7 +515,7 @@ const foundry = {
         //wait for the file selection and image processing result
         let file = await df_waitForAudioFileSelection();
         return await df_transcribe({
-          inputKey: inputKey,
+          apiKey: apiKey,
           file: file,
         });
       } catch (error) {
@@ -526,7 +526,7 @@ const foundry = {
     //In file mode, transcribe the provided file without a popup. Can be used if file selection needs to be handled differently.
     if (type === "file") {
       return await df_transcribe({
-        inputKey: inputKey,
+        apiKey: apiKey,
         file: file,
       });
     }
@@ -555,7 +555,7 @@ const foundry = {
               ondataavailable: async function (blob) {
                 //Add the result to transcription variable
                 transcription += await df_transcribe({
-                  inputKey: inputKey,
+                  apiKey: apiKey,
                   file: blob,
                 });
 
@@ -586,7 +586,7 @@ const foundry = {
           var blob = recordAudio.getBlob();
 
           let completeTranscription = await df_transcribe({
-            inputKey: inputKey,
+            apiKey: apiKey,
             file: blob,
             type: "file",
           });
@@ -623,7 +623,7 @@ const foundry = {
           {
             method: "POST",
             headers: {
-              Authorization: `Bearer ${inputKey}`,
+              Authorization: `Bearer ${apiKey}`,
             },
             body: formData,
           }
@@ -713,6 +713,24 @@ const foundry = {
           }
         };
       });
+    }
+  },
+  models: async function (apiKey) {
+    try {
+      const response = await fetch("https://data.id.tue.nl/v1/models", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+      });
+      //Wait for LocalAI response
+      const json = await response.json();
+      const models = json.data;
+      console.log("Models:", models);
+      return models;
+    } catch (err) {
+      console.error(err);
     }
   },
   messageHistory: [],

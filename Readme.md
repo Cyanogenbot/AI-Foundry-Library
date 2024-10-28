@@ -14,7 +14,7 @@ First, dowload the library (choose either the regular or the minified version). 
 
 ## How to use
 
-Five functions are available to make AI requests. Before being able to make such requests, an API key must be created inside of Data Foundry. Each function in this library requires this API key. Other inputs are optional to change the AI functionality. All function parameters must be placed in an object. E.g. foundry.textToText({inputKey: 'df-abcde...=', userPrompt: 'Can you tell me about Eindhoven?'}). Below, you will find all available functions and their possible parameters.
+Five functions are available to make AI requests. Before being able to make such requests, an API key must be created inside of Data Foundry. Each function in this library requires this API key. Other inputs are optional to change the AI functionality. All function parameters must be placed in an object. E.g. foundry.textToText({apiKey: 'df-abcde...=', userPrompt: 'Can you tell me about Eindhoven?'}). Below, you will find all available functions and their possible parameters.
 
 ### Functions
 
@@ -22,7 +22,7 @@ Five functions are available to make AI requests. Before being able to make such
 
 Function to make requests to text-to-text models. Parameters:
 
-- inputKey: Data Foundry API Key
+- apiKey: Data Foundry API Key
 - model: Chosen AI model. Default model applies
 - userPrompt: Main prompt
 - systemPrompt: System prompt
@@ -39,7 +39,7 @@ The message history can be accessed through the foundry.messageHistory variable.
 
 Function to make requests to text-to-image models. Parameters:
 
-- inputKey: Data Foundry API Key
+- apiKey: Data Foundry API Key
 - userPrompt: Main prompt
 - temperature: (default = 0.9)
 - noLogging: (default = false)
@@ -57,7 +57,7 @@ Coming soon. In case of dire need: there is a text-to-speech API available in Da
 
 Function to make requests to image-to-text models. Images can be provided in the prompt (using an online image URL or file path) or can be automatically asked to be uploaded by the user by setting popup to true. Parameters:
 
-- inputKey: Data Foundry API Key
+- apiKey: Data Foundry API Key
 - model: Chosen AI model. Default model applies
 - userPrompt: Main prompt
 - systemPrompt: System prompt
@@ -73,7 +73,7 @@ Function to make requests to image-to-text models. Images can be provided in the
 
 Function to make requests to sound-to-text models. Three types are available: file, record, and popup. The file type will transcribe the provided audio file. The record type will record audio and transcribe this live. The popup type will automatically ask for the user to upload an audio file that will be transcribed. Parameters:
 
-- inputKey: Data Foundry API Key
+- apiKey: Data Foundry API Key
 - type: (default = file) Choose between three types: 'file', 'record', or 'popup'. 'file' will transcribe the provided audio file. 'record' will record audio and transcribe this live. 'popup' will automatically ask for the user to upload an audio file that will be transcribed
 - sliceDuration: (default = 5000) Duration in miliseconds of transcription slices. Only relevant if type is set to 'record'. If so, a new piece of transcription will become available repeatedly at intervals of the set duration. Highter sliceDurations will give better results, but lower speeds.
 - file: Audio file that will be transcribed. Only required if type is set to 'file'
