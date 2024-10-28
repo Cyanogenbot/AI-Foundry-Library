@@ -10,11 +10,11 @@ This library was developed by Jort Wiersma, coached by Mathias Funk, at the Depa
 
 ## How to install
 
-First, dowload the library (choose either the regular or the minified version). Then, place the file inside of the folder where you HTML file is hosted. Inside of your HTML file, in the head element, create a script-tag that refers to the library file. E.g. <script src="./AI_Foundry_Library.js"></script>
+First, dowload the library (choose either the regular or the minified version). Then, place the file inside of the folder where you HTML file is hosted. Inside of your HTML file, in the head element, create a script-tag that refers to the library file. E.g. `<script src="./AI_Foundry_Library.js"></script>`
 
 ## How to use
 
-Five functions are available to make AI requests. Before being able to make such requests, an API key must be created inside of Data Foundry. Each function in this library requires this API key. Other inputs are optional to change the AI functionality. All function parameters must be placed in an object. E.g. foundry.textToText({apiKey: 'df-abcde...=', userPrompt: 'Can you tell me about Eindhoven?'}). Below, you will find all available functions and their possible parameters.
+Five functions are available to make AI requests. Before being able to make such requests, an API key must be created inside of Data Foundry. Each function in this library requires this API key. Other inputs are optional to change the AI functionality. All function parameters must be placed in an object. E.g. `foundry.textToText({apiKey: 'df-abcde...=', userPrompt: 'Can you tell me about Eindhoven?'})`. Below, you will find all available functions and their possible parameters.
 
 ### Functions
 
