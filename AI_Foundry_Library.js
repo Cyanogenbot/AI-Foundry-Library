@@ -6,7 +6,7 @@ const foundry = {
     systemPrompt,
     temperature = 0.9,
     maxTokens = 250,
-    logging = false,
+    logging,
     rememberMessages = 0,
     loadingIndicatorId,
     resultElementId,
@@ -61,9 +61,9 @@ const foundry = {
     try {
       //Start the loading indicator
       if (loadingIndicatorId) {
-        if (document.getElementById(loadingIndicatorId)) {
+        if (document.querySelector(`#${loadingIndicatorId}`)) {
           document
-            .getElementById(loadingIndicatorId)
+            .querySelector(`#${loadingIndicatorId}`)
             .setAttribute("aria-busy", "true");
         } else {
           console.error("Element selected for loading indicator not found");
@@ -105,14 +105,14 @@ const foundry = {
 
       //Place result on the page
       if (resultElementId) {
-        document.getElementById(resultElementId).innerHTML = chatResponse;
+        document.querySelector(`#${resultElementId}`).innerHTML = chatResponse;
       }
 
       //Stop loading indicator
       if (loadingIndicatorId) {
-        if (document.getElementById(loadingIndicatorId)) {
+        if (document.querySelector(`#${loadingIndicatorId}`)) {
           document
-            .getElementById(loadingIndicatorId)
+            .querySelector(`#${loadingIndicatorId}`)
             .setAttribute("aria-busy", "false");
         } else {
           console.error("Element selected for loading indicator not found");
@@ -161,9 +161,9 @@ const foundry = {
     try {
       //add loading indicator
       if (loadingIndicatorId) {
-        if (document.getElementById(loadingIndicatorId)) {
+        if (document.querySelector(`#${loadingIndicatorId}`)) {
           document
-            .getElementById(loadingIndicatorId)
+            .querySelector(`#${loadingIndicatorId}`)
             .setAttribute("aria-busy", "true");
         } else {
           console.error("Element selected for loading indicator not found");
@@ -201,14 +201,14 @@ const foundry = {
 
       //If a result element has been provided (which should be an <img> element, place the result)
       if (resultElementId) {
-        document.getElementById(resultElementId).src = data["image_url"];
+        document.querySelector(`#${resultElementId}`).src = data["image_url"];
       }
 
       //Stop loading indicator
       if (loadingIndicatorId) {
-        if (document.getElementById(loadingIndicatorId)) {
+        if (document.querySelector(`#${loadingIndicatorId}`)) {
           document
-            .getElementById(loadingIndicatorId)
+            .querySelector(`#${loadingIndicatorId}`)
             .setAttribute("aria-busy", "false");
         } else {
           console.error("Element selected for loading indicator not found");
@@ -252,9 +252,9 @@ const foundry = {
     }
 
     if (loadingIndicatorId) {
-      if (document.getElementById(loadingIndicatorId)) {
+      if (document.querySelector(`#${loadingIndicatorId}`)) {
         document
-          .getElementById(loadingIndicatorId)
+          .querySelector(`#${loadingIndicatorId}`)
           .setAttribute("aria-busy", "true");
       } else {
         console.error("Element selected for loading indicator not found");
@@ -290,16 +290,16 @@ const foundry = {
         );
       }
       if (loadingIndicatorId) {
-        if (document.getElementById(loadingIndicatorId)) {
+        if (document.querySelector(`#${loadingIndicatorId}`)) {
           document
-            .getElementById(loadingIndicatorId)
+            .querySelector(`#${loadingIndicatorId}`)
             .setAttribute("aria-busy", "false");
         } else {
           console.error("Element selected for loading indicator not found");
         }
       }
       if (resultElementId) {
-        document.getElementById(resultElementId).src = audioLink;
+        document.querySelector(`#${resultElementId}`).src = audioLink;
       }
 
       return audioLink;
@@ -316,7 +316,7 @@ const foundry = {
     popup = false,
     temperature = 0.9,
     maxTokens = 250,
-    logging = false,
+    logging,
     loadingIndicatorId,
     resultElementId,
   }) {
@@ -333,11 +333,11 @@ const foundry = {
     //if image prompt type is set to popup, ask for an image upload by the user
     if (popup) {
       //Create a hidden input element, required for file uploads
-      if (!document.getElementById("df_fileInput")) {
+      if (!document.querySelector("#df_fileInput")) {
         document.body.innerHTML += `<input type="file" id="df_fileInput" accept="image/*" style="display: none;" onchange=""></input>`;
       }
       //Activate the file input. The user will be asked to upload an image
-      document.getElementById("df_fileInput").click();
+      document.querySelector("#df_fileInput").click();
 
       //Wait for the processed image
       try {
@@ -369,9 +369,9 @@ const foundry = {
     try {
       //Start the loading indicator
       if (loadingIndicatorId) {
-        if (document.getElementById(loadingIndicatorId)) {
+        if (document.querySelector(`#${loadingIndicatorId}`)) {
           document
-            .getElementById(loadingIndicatorId)
+            .querySelector(`#${loadingIndicatorId}`)
             .setAttribute("aria-busy", "true");
         } else {
           console.error("Element selected for loading indicator not found");
@@ -415,14 +415,14 @@ const foundry = {
 
       //Place result on the page
       if (resultElementId) {
-        document.getElementById(resultElementId).innerHTML = chatResponse;
+        document.querySelector(`#${resultElementId}`).innerHTML = chatResponse;
       }
 
       //Stop loading indicator
       if (loadingIndicatorId) {
-        if (document.getElementById(loadingIndicatorId)) {
+        if (document.querySelector(`#${loadingIndicatorId}`)) {
           document
-            .getElementById(loadingIndicatorId)
+            .querySelector(`#${loadingIndicatorId}`)
             .setAttribute("aria-busy", "false");
         } else {
           console.error("Element selected for loading indicator not found");
@@ -437,7 +437,7 @@ const foundry = {
 
     function df_waitForFileSelection() {
       return new Promise((resolve, reject) => {
-        const fileInput = document.getElementById("df_fileInput");
+        const fileInput = document.querySelector("#df_fileInput");
 
         //Check if file input exists
         if (!fileInput) {
@@ -558,7 +558,7 @@ const foundry = {
     file, //The audio file that needs to be transcribed
     resultElementId, //Element that will be used to place the result on the page
     loadingIndicatorId, //Element that will be given a loading indicator attribute when the AI is working
-    logging, //Set to true to remove console logging
+    logging, //Set to false to remove console logging
     stopRec = false, //In order to stop the recording, pass isRecording = true
   }) {
     if (!apiKey) {
@@ -584,11 +584,11 @@ const foundry = {
     //In popup mode, create a popup that will ask for an audio file upload
     if (type === "popup") {
       //Create a hidden input element, required for file uploads
-      if (!document.getElementById("df_audioFileInput")) {
+      if (!document.querySelector("#df_audioFileInput")) {
         document.body.innerHTML += `<input type="file" id="df_audioFileInput" accept="audio/*" style="display: none;" onchange=""></input>`;
       }
       //Activate the file input. The user will be asked to upload an image
-      document.getElementById("df_audioFileInput").click();
+      document.querySelector("#df_audioFileInput").click();
 
       //Wait for the audio file upload
       try {
@@ -645,7 +645,7 @@ const foundry = {
 
                 //Place resulting transcription on the page
                 if (resultElementId) {
-                  document.getElementById(resultElementId).innerHTML =
+                  document.querySelector(`#${resultElementId}`).innerHTML =
                     transcription;
                 }
               },
@@ -672,7 +672,7 @@ const foundry = {
           });
           //Place result on screen
           if (resultElementId) {
-            document.getElementById(resultElementId).innerHTML =
+            document.querySelector(`#${resultElementId}`).innerHTML =
               completeTranscription;
           }
           resolve(completeTranscription);
@@ -689,9 +689,9 @@ const foundry = {
       try {
         //Add loading indicator
         if (loadingIndicatorId) {
-          if (document.getElementById(loadingIndicatorId)) {
+          if (document.querySelector(`#${loadingIndicatorId}`)) {
             document
-              .getElementById(loadingIndicatorId)
+              .querySelector(`#${loadingIndicatorId}`)
               .setAttribute("aria-busy", "true");
           } else {
             console.error("Element selected for loading indicator not found");
@@ -716,9 +716,9 @@ const foundry = {
 
         //Remove loading indicator
         if (loadingIndicatorId) {
-          if (document.getElementById(loadingIndicatorId)) {
+          if (document.querySelector(`#${loadingIndicatorId}`)) {
             document
-              .getElementById(loadingIndicatorId)
+              .querySelector(`#${loadingIndicatorId}`)
               .setAttribute("aria-busy", "false");
           } else {
             console.error("Element selected for loading indicator not found");
@@ -765,7 +765,7 @@ const foundry = {
     //Helper function that waits for the selection of an audio file when popup mode is selected
     function df_waitForAudioFileSelection() {
       return new Promise((resolve, reject) => {
-        const fileInput = document.getElementById("df_audioFileInput");
+        const fileInput = document.querySelector("#df_audioFileInput");
 
         //Check if file input exists
         if (!fileInput) {
