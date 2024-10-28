@@ -6,7 +6,7 @@ const foundry = {
     systemPrompt,
     temperature = 0.9,
     maxTokens = 250,
-    noLogging = false,
+    logging = false,
     rememberMessages = 0,
     loadingIndicatorId,
     resultElementId,
@@ -17,13 +17,13 @@ const foundry = {
       return;
     }
 
-    if (!noLogging) {
+    if (logging) {
       console.log("Running text-to-text function");
     }
 
     //Create message for request
     if (rememberMessages) {
-      if (!noLogging) {
+      if (logging) {
         console.log("Chat history is active.");
       }
 
@@ -99,7 +99,7 @@ const foundry = {
 
       // json.content contains the generated chat response
       let chatResponse = json.choices[0].message.content;
-      if (!noLogging) {
+      if (logging) {
         console.log("Result:", chatResponse);
       }
 
@@ -142,14 +142,14 @@ const foundry = {
     apiKey,
     userPrompt,
     temperature = 0.9,
-    noLogging,
+    logging,
     loadingIndicatorId,
     resultElementId,
     steps = 20,
     width = 512,
     height = 512,
   }) {
-    if (!noLogging) {
+    if (logging) {
       console.log("Running text-to-image function");
     }
     //Do not run the function when no API key is given
@@ -195,7 +195,7 @@ const foundry = {
       }
 
       const data = await response.json();
-      if (!noLogging) {
+      if (logging) {
         console.log("Generated image:", data["image_url"]);
       }
 
@@ -231,7 +231,7 @@ const foundry = {
     language = "en",
     loadingIndicatorId,
     resultElementId,
-    noLogging,
+    logging,
   }) {
     if (!apiKey) {
       //Do not run the function when no API key has been provided
@@ -247,7 +247,7 @@ const foundry = {
       return;
     }
 
-    if (!noLogging) {
+    if (logging) {
       console.log("Running text-to-sound function");
     }
 
@@ -281,7 +281,7 @@ const foundry = {
       );
       const json = await response.json();
       const audioLink = "https://data.id.tue.nl/api/vendor/t2s/" + json.text;
-      if (!noLogging) {
+      if (logging) {
         console.log("Generated audio:", audioLink);
       }
       if (json.text === undefined) {
@@ -316,7 +316,7 @@ const foundry = {
     popup = false,
     temperature = 0.9,
     maxTokens = 250,
-    noLogging = false,
+    logging = false,
     loadingIndicatorId,
     resultElementId,
   }) {
@@ -326,7 +326,7 @@ const foundry = {
       return;
     }
 
-    if (!noLogging) {
+    if (logging) {
       console.log("Running image-to-text function");
     }
 
@@ -342,7 +342,7 @@ const foundry = {
       //Wait for the processed image
       try {
         //Wait for the file selection and image processing result
-        image = await df_waitForFileSelection(noLogging);
+        image = await df_waitForFileSelection(logging);
       } catch (error) {
         console.error("Error:", error.message);
       }
@@ -409,7 +409,7 @@ const foundry = {
       // json.content contains the generated chat response
       let chatResponse = json.choices[0].message.content;
 
-      if (!noLogging) {
+      if (logging) {
         console.log("Result:", chatResponse);
       }
 
@@ -451,13 +451,13 @@ const foundry = {
 
           if (files && files.length > 0) {
             const selectedFile = files[0];
-            if (!noLogging) {
+            if (logging) {
               console.log("File selected:", selectedFile);
             }
 
             //Call df_processImage() when the file has been selected
             try {
-              image = await df_processImage(selectedFile, noLogging);
+              image = await df_processImage(selectedFile, logging);
               resolve(image); //Resolve the Promise with the processed image
             } catch (error) {
               reject(new Error("Error during image processing"));
@@ -479,7 +479,7 @@ const foundry = {
             img.src = e.target.result;
 
             img.onload = function () {
-              df_processImageLogic(img, noLogging).then(resolve);
+              df_processImageLogic(img, logging).then(resolve);
             };
 
             img.onerror = function () {
@@ -501,7 +501,7 @@ const foundry = {
           img.src = source;
 
           img.onload = function () {
-            df_processImageLogic(img, noLogging).then(resolve);
+            df_processImageLogic(img, logging).then(resolve);
           };
 
           img.onerror = function () {
@@ -544,7 +544,7 @@ const foundry = {
 
         // Get the data URL
         const processedImage = canvas.toDataURL("image/jpeg", 0.5); //0.5 reduces image quality to decrease the prompt length
-        if (!noLogging) {
+        if (logging) {
           console.log("Image processed.");
         }
         resolve(processedImage);
@@ -558,7 +558,7 @@ const foundry = {
     file, //The audio file that needs to be transcribed
     resultElementId, //Element that will be used to place the result on the page
     loadingIndicatorId, //Element that will be given a loading indicator attribute when the AI is working
-    noLogging, //Set to true to remove console logging
+    logging, //Set to true to remove console logging
     stopRec = false, //In order to stop the recording, pass isRecording = true
   }) {
     if (!apiKey) {
@@ -630,7 +630,7 @@ const foundry = {
               numberOfAudioChannels: 1,
               desiredSampRate: 16000,
               timeSlice: sliceDuration, //Duration of time slices (miliseconds) of transcriptions
-              disableLogs: noLogging, //Disable logging is noLogging is set to true
+              disableLogs: logging, //Disable logging is logging is set to true
 
               ondataavailable: async function (blob) {
                 //Add the result to transcription variable
@@ -639,7 +639,7 @@ const foundry = {
                   file: blob,
                 });
 
-                if (!noLogging) {
+                if (logging) {
                   console.log("Transcription:", transcription); //Log the transcription
                 }
 
@@ -709,7 +709,7 @@ const foundry = {
           }
         );
         const result = await response.json(); //It may occur that the reponsonse is not perfect json, leading to errors
-        if (!noLogging) {
+        if (logging) {
           //log result
           console.log("Result:", result.text);
         }
@@ -736,12 +736,12 @@ const foundry = {
     function loadRecordRTC(callback) {
       // Check if RecordRTC is already available
       if (typeof RecordRTC !== "undefined") {
-        if (!noLogging) {
+        if (logging) {
           console.log("RecordRTC is already loaded.");
         }
         callback(); //If loaded, run the callback
       } else {
-        if (!noLogging) {
+        if (logging) {
           console.log("RecordRTC is not loaded, adding script to the page.");
         }
         //Create a script element to load RecordRTC from CDN
@@ -751,7 +751,7 @@ const foundry = {
 
         //Set up callback when the script is loaded
         script.onload = function () {
-          if (!noLogging) {
+          if (logging) {
             console.log("RecordRTC has been loaded.");
           }
           callback();
@@ -779,7 +779,7 @@ const foundry = {
 
           if (files && files.length > 0) {
             const selectedFile = files[0];
-            if (!noLogging) {
+            if (logging) {
               console.log("File selected:", selectedFile);
             }
             //Continue transcription when file becomes available
