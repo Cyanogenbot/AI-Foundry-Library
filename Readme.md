@@ -18,7 +18,7 @@ Five functions are available to make AI requests. Before being able to make such
 
 ### Functions
 
-#### foundry.textToText()
+#### foundry.textToText({})
 
 Function to make requests to text-to-text models. Parameters:
 
@@ -35,7 +35,7 @@ Function to make requests to text-to-text models. Parameters:
 
 The message history can be accessed through the foundry.messageHistory variable. This can be used for more complex cases such as automatic chat summarization.
 
-#### foundry.textToImage()
+#### foundry.textToImage({})
 
 Function to make requests to text-to-image models. Parameters:
 
@@ -49,11 +49,11 @@ Function to make requests to text-to-image models. Parameters:
 - width: (default = 512) Image width
 - height: (default = 512) Image height
 
-#### foundry.textToSound()
+#### foundry.textToSound({})
 
 Coming soon. In case of dire need: there is a text-to-speech API available in Data Foundry, although the result will sound robotic.
 
-#### foundry.imageToText()
+#### foundry.imageToText({})
 
 Function to make requests to image-to-text models. Images can be provided in the prompt (using an online image URL or file path) or can be automatically asked to be uploaded by the user by setting popup to true. Parameters:
 
@@ -69,7 +69,7 @@ Function to make requests to image-to-text models. Images can be provided in the
 - loadingIndicatorId: Id of HTML element that will be given a loading indicator attribute
 - resultElementId: ID of HTML element that will be used to place AI response in
 
-#### foundry.soundToText()
+#### foundry.soundToText({})
 
 Function to make requests to sound-to-text models. Three types are available: file, record, and popup. The file type will transcribe the provided audio file. The record type will record audio and transcribe this live. The popup type will automatically ask for the user to upload an audio file that will be transcribed. Parameters:
 
@@ -81,6 +81,12 @@ Function to make requests to sound-to-text models. Three types are available: fi
 - resultElementId: ID of HTML element that will be used to place AI response in
 - noLogging: (default = false)
 - stopRec: (default = false) If audio is being recorded, pass the same function with stopRec set to true to stop the recording.
+
+#### foundry.models()
+
+Function to retreive the available models to choose from. Parameters are not placed inside an object. Parameters:
+
+- apiKey: Data Foundry API Key
 
 ### Variables
 
