@@ -6,7 +6,7 @@ const foundry = {
     systemPrompt,
     temperature = 0.9,
     maxTokens = 250,
-    logging,
+    logging = true,
     rememberMessages = 0,
     loadingIndicatorId,
     resultElementId,
@@ -74,18 +74,11 @@ const foundry = {
         "https://data.id.tue.nl/v1/chat/completions",
         {
           method: "POST",
-          cache: "no-cache",
-          redirect: "manual",
-
           headers: {
             "Content-Type": "application/json",
-            "User-Agent": "curl/8.7.1",
             Authorization: `Bearer ${apiKey}`,
           },
-          referrerPolicy: "no-referrer",
           body: JSON.stringify({
-            api_token: apiKey,
-            task: "chat",
             messages: messages,
             model: model,
             temperature: temperature,
@@ -142,7 +135,7 @@ const foundry = {
     apiKey,
     userPrompt,
     temperature = 0.9,
-    logging,
+    logging = true,
     loadingIndicatorId,
     resultElementId,
     steps = 20,
@@ -175,7 +168,6 @@ const foundry = {
         "https://data.id.tue.nl/v1/images/generations",
         {
           method: "POST",
-
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${apiKey}`,
@@ -231,7 +223,7 @@ const foundry = {
     language = "en",
     loadingIndicatorId,
     resultElementId,
-    logging,
+    logging = true,
   }) {
     if (!apiKey) {
       //Do not run the function when no API key has been provided
@@ -266,14 +258,11 @@ const foundry = {
         `https://data.id.tue.nl/api/vendor/t2s/${projectId}`,
         {
           method: "POST",
-          cache: "no-cache",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${apiKey}`,
           },
-          referrerPolicy: "no-referrer",
           body: JSON.stringify({
-            api_token: apiKey,
             lang: language,
             text: input,
           }),
@@ -316,7 +305,7 @@ const foundry = {
     popup = false,
     temperature = 0.9,
     maxTokens = 250,
-    logging,
+    logging = true,
     loadingIndicatorId,
     resultElementId,
   }) {
@@ -382,19 +371,11 @@ const foundry = {
         "https://data.id.tue.nl/v1/chat/completions",
         {
           method: "POST",
-          cache: "no-cache",
-          redirect: "manual",
-
           headers: {
             "Content-Type": "application/json",
-            "User-Agent": "curl/8.7.1",
             Authorization: `Bearer ${apiKey}`,
           },
-          referrerPolicy: "no-referrer",
           body: JSON.stringify({
-            key: "value",
-            api_token: apiKey,
-            task: "chat",
             messages: messages,
             model: model,
             temperature: temperature,
@@ -558,7 +539,7 @@ const foundry = {
     file, //The audio file that needs to be transcribed
     resultElementId, //Element that will be used to place the result on the page
     loadingIndicatorId, //Element that will be given a loading indicator attribute when the AI is working
-    logging, //Set to false to remove console logging
+    logging = true, //Set to false to remove console logging
     stopRec = false, //In order to stop the recording, pass isRecording = true
   }) {
     if (!apiKey) {
@@ -630,7 +611,7 @@ const foundry = {
               numberOfAudioChannels: 1,
               desiredSampRate: 16000,
               timeSlice: sliceDuration, //Duration of time slices (miliseconds) of transcriptions
-              disableLogs: logging, //Disable logging is logging is set to true
+              disableLogs: !logging, //Disable logging is logging is set to false
 
               ondataavailable: async function (blob) {
                 //Add the result to transcription variable
