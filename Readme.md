@@ -51,7 +51,13 @@ Function to make requests to text-to-image models. Parameters:
 
 #### foundry.textToSound({})
 
-Coming soon. In case of dire need: there is a text-to-speech API available in Data Foundry, although the result will sound robotic.
+Function to generate speech from text. Parameters:
+
+- apiKey: Data Foundry API Key
+- projectId: Data Foundry Project ID
+- input: Text that will be used for speech generation
+- language: (default 'en') Chosen language, options are 'en', 'nl', 'de' and more
+- noLogging: (default = false)
 
 #### foundry.imageToText({})
 
