@@ -1,17 +1,16 @@
 const foundry = {
   textToText: async function ({
-    apiKey,
+    api_token,
     model = "hermes-2-pro-llama-3-8b",
-    userPrompt,
-    systemPrompt,
+    prompt,
+    messages,
     temperature = 0.9,
     maxTokens = 250,
     logging = true,
-    rememberMessages = 0,
     loadingElementSelector,
     resultElementSelector,
   }) {
-    if (!apiKey) {
+    if (!api_token) {
       //Do not run the function when no API key is given
       console.error("No API key provided.");
       return;
@@ -22,38 +21,16 @@ const foundry = {
     }
 
     //Create message for request
-    if (rememberMessages) {
-      if (logging) {
-        console.log("Chat history is active.");
+    if (!messages) {
+      if (!prompt) {
+        console.error("No prompt given. Empty message created.");
+        prompt = "";
       }
-
-      //Include the message history in the prompt
-      let message = `React to the message based on this message history: ${JSON.stringify(
-        foundry.messageHistory
-      )}. Latest message: ${userPrompt}`;
-
-      //Create a message for LocalAI
-      messages = [
-        {
-          role: "system",
-          content: systemPrompt,
-        },
-        {
-          role: "user",
-          content: message,
-        },
-      ];
-    } else {
-      //When past messages are not remembered (rememberMessages = 0), the userPrompt will directly be passed in the message
       messages = [
         //Create a message for LocalAI
         {
-          role: "system",
-          content: systemPrompt,
-        },
-        {
           role: "user",
-          content: userPrompt,
+          content: prompt,
         },
       ];
     }
@@ -76,7 +53,7 @@ const foundry = {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${apiKey}`,
+            Authorization: `Bearer ${api_token}`,
           },
           body: JSON.stringify({
             messages: messages,
@@ -98,7 +75,7 @@ const foundry = {
 
       //Place result on the page
       if (resultElementSelector) {
-        document.querySelector(resultElementSelector).innerHTML = chatResponse;
+        document.querySelector(resultElementSelector).innerHTML += chatResponse;
       }
 
       //Stop loading indicator
@@ -112,19 +89,6 @@ const foundry = {
         }
       }
 
-      if (rememberMessages) {
-        //If specified that messages should be remembered
-        foundry.messageHistory.push(
-          { role: "user", content: userPrompt },
-          { role: "assistant", content: chatResponse }
-        );
-
-        //remove older messages when the maximum amount of remembered messages is exceeded
-        if (foundry.messageHistory.length > rememberMessages) {
-          foundry.messageHistory.splice(0, 2);
-        }
-      }
-
       //Return the AI response
       return chatResponse;
     } catch (error) {
@@ -132,8 +96,8 @@ const foundry = {
     }
   },
   textToImage: async function ({
-    apiKey,
-    userPrompt,
+    api_token,
+    prompt,
     temperature = 0.9,
     logging = true,
     loadingElementSelector,
@@ -146,7 +110,7 @@ const foundry = {
       console.log("Running text-to-image function");
     }
     //Do not run the function when no API key is given
-    if (!apiKey) {
+    if (!api_token) {
       console.error("No API key provided.");
       return;
     }
@@ -170,10 +134,10 @@ const foundry = {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${apiKey}`,
+            Authorization: `Bearer ${api_token}`,
           },
           body: JSON.stringify({
-            prompt: userPrompt,
+            prompt: prompt,
             steps: steps,
             width: width,
             height: height,
@@ -217,15 +181,15 @@ const foundry = {
     }
   },
   textToSound: async function ({
-    apiKey,
+    api_token,
     projectId,
-    input,
+    prompt,
     language = "en",
     loadingElementSelector,
     resultElementSelector,
     logging = true,
   }) {
-    if (!apiKey) {
+    if (!api_token) {
       //Do not run the function when no API key has been provided
       console.error("No API key provided.");
       return;
@@ -260,11 +224,11 @@ const foundry = {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${apiKey}`,
+            Authorization: `Bearer ${api_token}`,
           },
           body: JSON.stringify({
             lang: language,
-            text: input,
+            text: prompt,
           }),
         }
       );
@@ -297,7 +261,7 @@ const foundry = {
     }
   },
   imageToText: async function ({
-    apiKey,
+    api_token,
     model = "llava-llama-3-8b-v1_1",
     userPrompt,
     systemPrompt,
@@ -309,7 +273,7 @@ const foundry = {
     loadingElementSelector,
     resultElementSelector,
   }) {
-    if (!apiKey) {
+    if (!api_token) {
       //Do not run the function when no API key has been provided
       console.error("No API key provided.");
       return;
@@ -373,7 +337,7 @@ const foundry = {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${apiKey}`,
+            Authorization: `Bearer ${api_token}`,
           },
           body: JSON.stringify({
             messages: messages,
@@ -396,7 +360,7 @@ const foundry = {
 
       //Place result on the page
       if (resultElementSelector) {
-        document.querySelector(resultElementSelector).innerHTML = chatResponse;
+        document.querySelector(resultElementSelector).innerHTML += chatResponse;
       }
 
       //Stop loading indicator
@@ -533,7 +497,7 @@ const foundry = {
     }
   },
   soundToText: async function ({
-    apiKey,
+    api_token,
     type = "file", //'file' or 'record' or 'popup'
     sliceDuration = 5000, //miliseconds
     file, //The audio file that needs to be transcribed
@@ -542,7 +506,7 @@ const foundry = {
     logging = true, //Set to false to remove console logging
     stopRec = false, //In order to stop the recording, pass isRecording = true
   }) {
-    if (!apiKey) {
+    if (!api_token) {
       //Do not run the function when no API key has been provided
       console.error("No API key provided.");
       return;
@@ -576,7 +540,7 @@ const foundry = {
         //wait for the file selection and image processing result
         let file = await df_waitForAudioFileSelection();
         return await df_transcribe({
-          apiKey: apiKey,
+          api_token: api_token,
           file: file,
         });
       } catch (error) {
@@ -587,7 +551,7 @@ const foundry = {
     //In file mode, transcribe the provided file without a popup. Can be used if file selection needs to be handled differently.
     if (type === "file") {
       return await df_transcribe({
-        apiKey: apiKey,
+        api_token: api_token,
         file: file,
       });
     }
@@ -616,7 +580,7 @@ const foundry = {
               ondataavailable: async function (blob) {
                 //Add the result to transcription variable
                 transcription += await df_transcribe({
-                  apiKey: apiKey,
+                  api_token: api_token,
                   file: blob,
                 });
 
@@ -626,7 +590,7 @@ const foundry = {
 
                 //Place resulting transcription on the page
                 if (resultElementSelector) {
-                  document.querySelector(resultElementSelector).innerHTML =
+                  document.querySelector(resultElementSelector).innerHTML +=
                     transcription;
                 }
               },
@@ -647,13 +611,13 @@ const foundry = {
           var blob = recordAudio.getBlob();
 
           let completeTranscription = await df_transcribe({
-            apiKey: apiKey,
+            api_token: api_token,
             file: blob,
             type: "file",
           });
           //Place result on screen
           if (resultElementSelector) {
-            document.querySelector(resultElementSelector).innerHTML =
+            document.querySelector(resultElementSelector).innerHTML +=
               completeTranscription;
           }
           resolve(completeTranscription);
@@ -684,7 +648,7 @@ const foundry = {
           {
             method: "POST",
             headers: {
-              Authorization: `Bearer ${apiKey}`,
+              Authorization: `Bearer ${api_token}`,
             },
             body: formData,
           }
@@ -776,13 +740,13 @@ const foundry = {
       });
     }
   },
-  models: async function (apiKey) {
+  models: async function (api_token) {
     try {
       const response = await fetch("https://data.id.tue.nl/v1/models", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
+          Authorization: `Bearer ${api_token}`,
         },
       });
       //Wait for LocalAI response
