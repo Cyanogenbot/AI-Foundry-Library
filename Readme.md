@@ -28,10 +28,10 @@ Function to make requests to text-to-text models. Parameters:
 - systemPrompt: System prompt
 - temperature: (default = 0.9)
 - maxTokens: (default = 250)
-- noLogging: (default = false)
+- logging: (default = true)
 - rememberMessages: (default = 0) The amount of messages that will be saved in chat history
-- loadingIndicatorId: Id of HTML element that will be given a loading indicator attribute
-- resultElementId: ID of HTML element that will be used to place AI response in
+- loadingElementSelector: Selector of HTML element that will be given a loading indicator attribute
+- resultElementSelector: Selector of HTML element that will be used to place AI response in
 
 The message history can be accessed through the foundry.messageHistory variable. This can be used for more complex cases such as automatic chat summarization.
 
@@ -42,9 +42,9 @@ Function to make requests to text-to-image models. Parameters:
 - apiKey: Data Foundry API Key
 - userPrompt: Main prompt
 - temperature: (default = 0.9)
-- noLogging: (default = false)
-- loadingIndicatorId: Id of HTML element that will be given a loading indicator attribute
-- resultElementId: ID of HTML element that will be used to place AI response in
+- logging: (default = true)
+- loadingElementSelector: Selector of HTML element that will be given a loading indicator attribute
+- resultElementSelector: Selector of HTML element that will be used to place AI response in
 - steps: (default = 20) Image generation steps
 - width: (default = 512) Image width
 - height: (default = 512) Image height
@@ -57,7 +57,7 @@ Function to generate speech from text. Parameters:
 - projectId: Data Foundry Project ID
 - input: Text that will be used for speech generation
 - language: (default 'en') Chosen language, options are 'en', 'nl', 'de' and more
-- noLogging: (default = false)
+- logging: (default = true)
 
 #### foundry.imageToText({})
 
@@ -71,9 +71,9 @@ Function to make requests to image-to-text models. Images can be provided in the
 - popup: (default = false) Setting this to true will automatically ask the user for an image.
 - temperature: (default = 0.9)
 - maxTokens: (default = 250)
-- noLogging: (default = false)
-- loadingIndicatorId: Id of HTML element that will be given a loading indicator attribute
-- resultElementId: ID of HTML element that will be used to place AI response in
+- logging: (default = true)
+- loadingElementSelector: Selector of HTML element that will be given a loading indicator attribute
+- resultElementSelector: Selector of HTML element that will be used to place AI response in
 
 #### foundry.soundToText({})
 
@@ -83,9 +83,9 @@ Function to make requests to sound-to-text models. Three types are available: fi
 - type: (default = file) Choose between three types: 'file', 'record', or 'popup'. 'file' will transcribe the provided audio file. 'record' will record audio and transcribe this live. 'popup' will automatically ask for the user to upload an audio file that will be transcribed
 - sliceDuration: (default = 5000) Duration in miliseconds of transcription slices. Only relevant if type is set to 'record'. If so, a new piece of transcription will become available repeatedly at intervals of the set duration. Highter sliceDurations will give better results, but lower speeds.
 - file: Audio file that will be transcribed. Only required if type is set to 'file'
-- loadingIndicatorId: Id of HTML element that will be given a loading indicator attribute when the AI is working
-- resultElementId: ID of HTML element that will be used to place AI response in
-- noLogging: (default = false)
+- loadingElementSelector: Selector of HTML element that will be given a loading indicator attribute when the AI is working
+- resultElementSelector: Selector of HTML element that will be used to place AI response in
+- logging: (default = true)
 - stopRec: (default = false) If audio is being recorded, pass the same function with stopRec set to true to stop the recording.
 
 #### foundry.models()

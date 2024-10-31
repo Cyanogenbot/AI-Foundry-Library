@@ -8,8 +8,8 @@ const foundry = {
     maxTokens = 250,
     logging = true,
     rememberMessages = 0,
-    loadingIndicatorId,
-    resultElementId,
+    loadingElementSelector,
+    resultElementSelector,
   }) {
     if (!apiKey) {
       //Do not run the function when no API key is given
@@ -60,10 +60,10 @@ const foundry = {
 
     try {
       //Start the loading indicator
-      if (loadingIndicatorId) {
-        if (document.querySelector(`#${loadingIndicatorId}`)) {
+      if (loadingElementSelector) {
+        if (document.querySelector(loadingElementSelector)) {
           document
-            .querySelector(`#${loadingIndicatorId}`)
+            .querySelector(loadingElementSelector)
             .setAttribute("aria-busy", "true");
         } else {
           console.error("Element selected for loading indicator not found");
@@ -97,15 +97,15 @@ const foundry = {
       }
 
       //Place result on the page
-      if (resultElementId) {
-        document.querySelector(`#${resultElementId}`).innerHTML = chatResponse;
+      if (resultElementSelector) {
+        document.querySelector(resultElementSelector).innerHTML = chatResponse;
       }
 
       //Stop loading indicator
-      if (loadingIndicatorId) {
-        if (document.querySelector(`#${loadingIndicatorId}`)) {
+      if (loadingElementSelector) {
+        if (document.querySelector(loadingElementSelector)) {
           document
-            .querySelector(`#${loadingIndicatorId}`)
+            .querySelector(loadingElementSelector)
             .setAttribute("aria-busy", "false");
         } else {
           console.error("Element selected for loading indicator not found");
@@ -136,8 +136,8 @@ const foundry = {
     userPrompt,
     temperature = 0.9,
     logging = true,
-    loadingIndicatorId,
-    resultElementId,
+    loadingElementSelector,
+    resultElementSelector,
     steps = 20,
     width = 512,
     height = 512,
@@ -153,10 +153,10 @@ const foundry = {
 
     try {
       //add loading indicator
-      if (loadingIndicatorId) {
-        if (document.querySelector(`#${loadingIndicatorId}`)) {
+      if (loadingElementSelector) {
+        if (document.querySelector(loadingElementSelector)) {
           document
-            .querySelector(`#${loadingIndicatorId}`)
+            .querySelector(loadingElementSelector)
             .setAttribute("aria-busy", "true");
         } else {
           console.error("Element selected for loading indicator not found");
@@ -192,15 +192,15 @@ const foundry = {
       }
 
       //If a result element has been provided (which should be an <img> element, place the result)
-      if (resultElementId) {
-        document.querySelector(`#${resultElementId}`).src = data["image_url"];
+      if (resultElementSelector) {
+        document.querySelector(resultElementSelector).src = data["image_url"];
       }
 
       //Stop loading indicator
-      if (loadingIndicatorId) {
-        if (document.querySelector(`#${loadingIndicatorId}`)) {
+      if (loadingElementSelector) {
+        if (document.querySelector(loadingElementSelector)) {
           document
-            .querySelector(`#${loadingIndicatorId}`)
+            .querySelector(loadingElementSelector)
             .setAttribute("aria-busy", "false");
         } else {
           console.error("Element selected for loading indicator not found");
@@ -221,8 +221,8 @@ const foundry = {
     projectId,
     input,
     language = "en",
-    loadingIndicatorId,
-    resultElementId,
+    loadingElementSelector,
+    resultElementSelector,
     logging = true,
   }) {
     if (!apiKey) {
@@ -243,10 +243,10 @@ const foundry = {
       console.log("Running text-to-sound function");
     }
 
-    if (loadingIndicatorId) {
-      if (document.querySelector(`#${loadingIndicatorId}`)) {
+    if (loadingElementSelector) {
+      if (document.querySelector(loadingElementSelector)) {
         document
-          .querySelector(`#${loadingIndicatorId}`)
+          .querySelector(loadingElementSelector)
           .setAttribute("aria-busy", "true");
       } else {
         console.error("Element selected for loading indicator not found");
@@ -278,17 +278,17 @@ const foundry = {
           "No result. It is possible your API Key and project ID are not matching."
         );
       }
-      if (loadingIndicatorId) {
-        if (document.querySelector(`#${loadingIndicatorId}`)) {
+      if (loadingElementSelector) {
+        if (document.querySelector(loadingElementSelector)) {
           document
-            .querySelector(`#${loadingIndicatorId}`)
+            .querySelector(loadingElementSelector)
             .setAttribute("aria-busy", "false");
         } else {
           console.error("Element selected for loading indicator not found");
         }
       }
-      if (resultElementId) {
-        document.querySelector(`#${resultElementId}`).src = audioLink;
+      if (resultElementSelector) {
+        document.querySelector(resultElementSelector).src = audioLink;
       }
 
       return audioLink;
@@ -306,8 +306,8 @@ const foundry = {
     temperature = 0.9,
     maxTokens = 250,
     logging = true,
-    loadingIndicatorId,
-    resultElementId,
+    loadingElementSelector,
+    resultElementSelector,
   }) {
     if (!apiKey) {
       //Do not run the function when no API key has been provided
@@ -357,10 +357,10 @@ const foundry = {
 
     try {
       //Start the loading indicator
-      if (loadingIndicatorId) {
-        if (document.querySelector(`#${loadingIndicatorId}`)) {
+      if (loadingElementSelector) {
+        if (document.querySelector(loadingElementSelector)) {
           document
-            .querySelector(`#${loadingIndicatorId}`)
+            .querySelector(loadingElementSelector)
             .setAttribute("aria-busy", "true");
         } else {
           console.error("Element selected for loading indicator not found");
@@ -395,15 +395,15 @@ const foundry = {
       }
 
       //Place result on the page
-      if (resultElementId) {
-        document.querySelector(`#${resultElementId}`).innerHTML = chatResponse;
+      if (resultElementSelector) {
+        document.querySelector(resultElementSelector).innerHTML = chatResponse;
       }
 
       //Stop loading indicator
-      if (loadingIndicatorId) {
-        if (document.querySelector(`#${loadingIndicatorId}`)) {
+      if (loadingElementSelector) {
+        if (document.querySelector(loadingElementSelector)) {
           document
-            .querySelector(`#${loadingIndicatorId}`)
+            .querySelector(loadingElementSelector)
             .setAttribute("aria-busy", "false");
         } else {
           console.error("Element selected for loading indicator not found");
@@ -537,8 +537,8 @@ const foundry = {
     type = "file", //'file' or 'record' or 'popup'
     sliceDuration = 5000, //miliseconds
     file, //The audio file that needs to be transcribed
-    resultElementId, //Element that will be used to place the result on the page
-    loadingIndicatorId, //Element that will be given a loading indicator attribute when the AI is working
+    resultElementSelector, //Element that will be used to place the result on the page
+    loadingElementSelector, //Element that will be given a loading indicator attribute when the AI is working
     logging = true, //Set to false to remove console logging
     stopRec = false, //In order to stop the recording, pass isRecording = true
   }) {
@@ -625,8 +625,8 @@ const foundry = {
                 }
 
                 //Place resulting transcription on the page
-                if (resultElementId) {
-                  document.querySelector(`#${resultElementId}`).innerHTML =
+                if (resultElementSelector) {
+                  document.querySelector(resultElementSelector).innerHTML =
                     transcription;
                 }
               },
@@ -652,8 +652,8 @@ const foundry = {
             type: "file",
           });
           //Place result on screen
-          if (resultElementId) {
-            document.querySelector(`#${resultElementId}`).innerHTML =
+          if (resultElementSelector) {
+            document.querySelector(resultElementSelector).innerHTML =
               completeTranscription;
           }
           resolve(completeTranscription);
@@ -669,10 +669,10 @@ const foundry = {
 
       try {
         //Add loading indicator
-        if (loadingIndicatorId) {
-          if (document.querySelector(`#${loadingIndicatorId}`)) {
+        if (loadingElementSelector) {
+          if (document.querySelector(loadingElementSelector)) {
             document
-              .querySelector(`#${loadingIndicatorId}`)
+              .querySelector(loadingElementSelector)
               .setAttribute("aria-busy", "true");
           } else {
             console.error("Element selected for loading indicator not found");
@@ -696,10 +696,10 @@ const foundry = {
         }
 
         //Remove loading indicator
-        if (loadingIndicatorId) {
-          if (document.querySelector(`#${loadingIndicatorId}`)) {
+        if (loadingElementSelector) {
+          if (document.querySelector(loadingElementSelector)) {
             document
-              .querySelector(`#${loadingIndicatorId}`)
+              .querySelector(loadingElementSelector)
               .setAttribute("aria-busy", "false");
           } else {
             console.error("Element selected for loading indicator not found");
