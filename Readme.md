@@ -20,7 +20,7 @@ Five functions are available to make AI requests. Before being able to make such
 
 #### foundry.textToText({})
 
-Function to make requests to text-to-text models. Parameters:
+Function to make requests to text-to-text models. Whenever both the prompt parameter and the messages parameter is provided, only the messages parameter is used. Parameters:
 
 - api_token: Data Foundry API Key
 - model: Chosen AI model. Default model applies
