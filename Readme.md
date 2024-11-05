@@ -14,7 +14,7 @@ First, dowload the library (choose either the regular or the minified version). 
 
 ## How to use
 
-Five functions are available to make AI requests. Before being able to make such requests, an API key must be created inside of Data Foundry. Each function in this library requires this API key. Other inputs are optional to change the AI functionality. All function parameters must be placed in an object. E.g. `foundry.textToText({api_token: 'df-abcde...=', userPrompt: 'Can you tell me about Eindhoven?'})`. Below, you will find all available functions and their possible parameters.
+Five functions are available to make AI requests. Before being able to make such requests, an API key must be created inside of Data Foundry. Each function in this library requires this API key. Other inputs are optional to change the AI functionality. All function parameters must be placed in an object. E.g. `foundry.textToText({api_token: 'df-abcde...=', prompt: 'Can you tell me about Eindhoven?'})`. Below, you will find all available functions and their possible parameters.
 
 ### Functions
 
