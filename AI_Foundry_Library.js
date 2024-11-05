@@ -224,9 +224,9 @@ const foundry = {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${api_token}`,
           },
           body: JSON.stringify({
+            api_token: api_token,
             lang: language,
             text: prompt,
           }),
