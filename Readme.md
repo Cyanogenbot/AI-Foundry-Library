@@ -18,6 +18,12 @@ Five functions are available to make AI requests. Before being able to make such
 
 ### Functions
 
+#### foundry.models()
+
+Function to retreive the available models to choose from. Parameters are not placed inside an object. Parameters:
+
+- api_token: Data Foundry API Key
+
 #### foundry.textToText({})
 
 Function to make requests to text-to-text models. Whenever both the prompt parameter and the messages parameter is provided, only the messages parameter is used. Parameters:
@@ -64,10 +70,9 @@ Function to make requests to image-to-text models. Images can be provided in the
 
 - api_token: Data Foundry API Key
 - model: Chosen AI model. Default model applies
-- userPrompt: Main prompt
+- prompt: Main prompt
 - systemPrompt: System prompt
-- image: Image file that will be sent to the AI. Image files selected from an HTML input and online image URLs both work. This variable is required as long as popup is not set to true.
-- popup: (default = false) Setting this to true will automatically ask the user for an image.
+- image: Image file that will be sent to the AI. Image files selected from an HTML input and online image URLs both work.
 - temperature: (default = 0.9)
 - maxTokens: (default = 250)
 - logging: (default = true)
@@ -79,16 +84,30 @@ Function to make requests to image-to-text models. Images can be provided in the
 Function to make requests to sound-to-text models. Three types are available: file, record, and popup. The file type will transcribe the provided audio file. The record type will record audio and transcribe this live. The popup type will automatically ask for the user to upload an audio file that will be transcribed. Parameters:
 
 - api_token: Data Foundry API Key
-- type: (default = file) Choose between three types: 'file', 'record', or 'popup'. 'file' will transcribe the provided audio file. 'record' will record audio and transcribe this live. 'popup' will automatically ask for the user to upload an audio file that will be transcribed
+- type: (default = file) Choose between three types: 'file', or 'record'. 'file' will transcribe the provided audio file. 'record' will record audio and transcribe this live.
 - sliceDuration: (default = 5000) Duration in miliseconds of transcription slices. Only relevant if type is set to 'record'. If so, a new piece of transcription will become available repeatedly at intervals of the set duration. Highter sliceDurations will give better results, but lower speeds.
 - file: Audio file that will be transcribed. Only required if type is set to 'file'
 - loadingElementSelector: Selector of HTML element that will be given a loading indicator attribute when the AI is working
 - resultElementSelector: Selector of HTML element that will be used to place AI response in
 - logging: (default = true)
-- stopRec: (default = false) If audio is being recorded, pass the same function with stopRec set to true to stop the recording.
 
-#### foundry.models()
+#### foundry.stopRec()
 
-Function to retreive the available models to choose from. Parameters are not placed inside an object. Parameters:
+- api_token: Data Foundry API Key. This can be left out, in which case the recorder will stop but not transcription is created of the complete recording (useful for longer audio recordings).
+- logging: (default = true)
+- loadingElementSelector: Selector of HTML element that will be given a loading indicator attribute
+- resultElementSelector: Selector of HTML element that will be used to place AI response in
 
-- api_token: Data Foundry API Key
+#### foundry.popup()
+
+Function to ask for a file using a file popup. It is possible to only allow either audio or image files, which is adviced to prevent erorrs. This function automatically pre-processes images. Parameters are not placed inside an object. Parameters:
+
+- type: `image` or `audio` (`sound` also works). This will only allow either image or audio files to be uploaded
+- logging: (default = true)
+
+#### foundry.processImage()
+
+Function that used to process images for both the popup() and imageToText() function. Parameters:
+
+- source: Image to be processed. This can be both an url to an online image, and a file selected using an html input element.
+- logging: (default = true)

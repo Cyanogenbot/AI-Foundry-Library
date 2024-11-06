@@ -263,10 +263,9 @@ const foundry = {
   imageToText: async function ({
     api_token,
     model = "llava-llama-3-8b-v1_1",
-    userPrompt,
+    prompt,
     systemPrompt,
     image,
-    popup = false,
     temperature = 0.9,
     maxTokens = 250,
     logging = true,
@@ -279,28 +278,14 @@ const foundry = {
       return;
     }
 
+    if (!image) {
+      console.error("No image provided!");
+    }
+
     if (logging) {
       console.log("Running image-to-text function");
     }
-
-    //if image prompt type is set to popup, ask for an image upload by the user
-    if (popup) {
-      //Create a hidden input element, required for file uploads
-      if (!document.querySelector("#df_fileInput")) {
-        document.body.innerHTML += `<input type="file" id="df_fileInput" accept="image/*" style="display: none;" onchange=""></input>`;
-      }
-      //Activate the file input. The user will be asked to upload an image
-      document.querySelector("#df_fileInput").click();
-
-      //Wait for the processed image
-      try {
-        //Wait for the file selection and image processing result
-        image = await df_waitForFileSelection(logging);
-      } catch (error) {
-        console.error("Error:", error.message);
-      }
-    } else image = await df_processImage(image);
-
+    image = await foundry.processImage(image);
     messages = [
       //Create a message for LocalAI
       {
@@ -310,7 +295,7 @@ const foundry = {
       {
         role: "user",
         content: [
-          { type: "text", text: userPrompt },
+          { type: "text", text: prompt },
           {
             type: "image_url",
             image_url: { url: image },
@@ -379,126 +364,10 @@ const foundry = {
     } catch (error) {
       console.error("Error:", error);
     }
-
-    function df_waitForFileSelection() {
-      return new Promise((resolve, reject) => {
-        const fileInput = document.querySelector("#df_fileInput");
-
-        //Check if file input exists
-        if (!fileInput) {
-          reject(new Error("File input element not found"));
-          return;
-        }
-
-        //Event listener for file selection
-        fileInput.onchange = async function (event) {
-          const files = event.target.files;
-
-          if (files && files.length > 0) {
-            const selectedFile = files[0];
-            if (logging) {
-              console.log("File selected:", selectedFile);
-            }
-
-            //Call df_processImage() when the file has been selected
-            try {
-              image = await df_processImage(selectedFile, logging);
-              resolve(image); //Resolve the Promise with the processed image
-            } catch (error) {
-              reject(new Error("Error during image processing"));
-            }
-          } else {
-            reject(new Error("No file selected"));
-          }
-        };
-      });
-    }
-    function df_processImage(source) {
-      return new Promise((resolve, reject) => {
-        //if the source is a File (Blob), use FileReader
-        if (source instanceof File) {
-          const reader = new FileReader();
-
-          reader.onload = function (e) {
-            const img = new Image();
-            img.src = e.target.result;
-
-            img.onload = function () {
-              df_processImageLogic(img, logging).then(resolve);
-            };
-
-            img.onerror = function () {
-              reject(new Error("Error loading image from file"));
-            };
-          };
-
-          reader.onerror = function () {
-            reject(new Error("Error reading the image file"));
-          };
-
-          //Start reading the file as a Data URL
-          reader.readAsDataURL(source);
-        }
-        //if the source is a URL, directly process the image
-        else if (typeof source === "string") {
-          const img = new Image();
-          img.crossOrigin = "Anonymous"; //Handle CORS if necessary
-          img.src = source;
-
-          img.onload = function () {
-            df_processImageLogic(img, logging).then(resolve);
-          };
-
-          img.onerror = function () {
-            reject(new Error("Error loading image from URL"));
-          };
-        } else {
-          reject(new Error("Invalid image source"));
-        }
-      });
-    }
-    function df_processImageLogic(img) {
-      return new Promise((resolve) => {
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-
-        //Reduce the image size
-        const maxWidth = 800;
-        const maxHeight = 800;
-
-        let width = img.width;
-        let height = img.height;
-
-        //Maintain aspect ratio
-        if (width > height) {
-          if (width > maxWidth) {
-            height *= maxWidth / width;
-            width = maxWidth;
-          }
-        } else {
-          if (height > maxHeight) {
-            width *= maxHeight / height;
-            height = maxHeight;
-          }
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-
-        ctx.drawImage(img, 0, 0, width, height); //Draw the image onto the canvas
-
-        // Get the data URL
-        const processedImage = canvas.toDataURL("image/jpeg", 0.5); //0.5 reduces image quality to decrease the prompt length
-        if (logging) {
-          console.log("Image processed.");
-        }
-        resolve(processedImage);
-      });
-    }
   },
   soundToText: async function ({
     api_token,
-    type = "file", //'file' or 'record' or 'popup'
+    type = "file", //'file' or 'record'
     sliceDuration = 5000, //miliseconds
     file, //The audio file that needs to be transcribed
     resultElementSelector, //Element that will be used to place the result on the page
@@ -506,16 +375,16 @@ const foundry = {
     logging = true, //Set to false to remove console logging
     stopRec = false, //In order to stop the recording, pass isRecording = true
   }) {
-    if (!api_token) {
-      //Do not run the function when no API key has been provided
-      console.error("No API key provided.");
-      return;
-    }
-
     //If the function is instructed to stop recording, do so and return a transcription of the complete recording
     if (stopRec) {
       let res = await stopRecording();
       return res;
+    }
+
+    if (!api_token) {
+      //Do not run the function when no API key has been provided
+      console.error("No API key provided.");
+      return;
     }
 
     //Variable that will get larger each time a new part of the recording is created. How often this happens depends on the sliceDuration
@@ -524,28 +393,6 @@ const foundry = {
     //In record mode, start the recording
     if (type === "record") {
       startRecording();
-    }
-
-    //In popup mode, create a popup that will ask for an audio file upload
-    if (type === "popup") {
-      //Create a hidden input element, required for file uploads
-      if (!document.querySelector("#df_audioFileInput")) {
-        document.body.innerHTML += `<input type="file" id="df_audioFileInput" accept="audio/*" style="display: none;" onchange=""></input>`;
-      }
-      //Activate the file input. The user will be asked to upload an image
-      document.querySelector("#df_audioFileInput").click();
-
-      //Wait for the audio file upload
-      try {
-        //wait for the file selection and image processing result
-        let file = await df_waitForAudioFileSelection();
-        return await df_transcribe({
-          api_token: api_token,
-          file: file,
-        });
-      } catch (error) {
-        console.error("Error:", error.message);
-      }
     }
 
     //In file mode, transcribe the provided file without a popup. Can be used if file selection needs to be handled differently.
@@ -610,16 +457,22 @@ const foundry = {
         recordAudio.stopRecording(async function () {
           var blob = recordAudio.getBlob();
 
-          let completeTranscription = await df_transcribe({
-            api_token: api_token,
-            file: blob,
-            type: "file",
-          });
-          //Place result on screen
-          if (resultElementSelector) {
-            document.querySelector(resultElementSelector).innerHTML +=
-              completeTranscription;
+          //Allow the option to not give an api token while running foundry.stopRec(), and then return an empty string (and not place the result on screen)
+          let completeTranscription = "";
+          if (api_token) {
+            completeTranscription = await df_transcribe({
+              api_token: api_token,
+              file: blob,
+              type: "file",
+            });
+
+            //Place result on screen
+            if (resultElementSelector) {
+              document.querySelector(resultElementSelector).innerHTML +=
+                completeTranscription;
+            }
           }
+
           resolve(completeTranscription);
         });
       });
@@ -706,37 +559,27 @@ const foundry = {
         document.head.appendChild(script);
       }
     }
-
-    //Helper function that waits for the selection of an audio file when popup mode is selected
-    function df_waitForAudioFileSelection() {
-      return new Promise((resolve, reject) => {
-        const fileInput = document.querySelector("#df_audioFileInput");
-
-        //Check if file input exists
-        if (!fileInput) {
-          reject(new Error("File input element not found"));
-          return;
-        }
-
-        //Event listener for file selection
-        fileInput.onchange = async function (event) {
-          const files = event.target.files;
-
-          if (files && files.length > 0) {
-            const selectedFile = files[0];
-            if (logging) {
-              console.log("File selected:", selectedFile);
-            }
-            //Continue transcription when file becomes available
-            try {
-              resolve(selectedFile);
-            } catch (error) {
-              reject(new Error("Error during image processing"));
-            }
-          } else {
-            reject(new Error("No file selected"));
-          }
-        };
+  },
+  stopRec: async function ({
+    api_token,
+    logging = true,
+    loadingElementSelector,
+    resultElementSelector,
+  }) {
+    if (api_token) {
+      return await foundry.soundToText({
+        api_token: api_token,
+        stopRec: true,
+        logging: logging,
+        loadingElementSelector,
+        resultElementSelector,
+      });
+    } else {
+      return await foundry.soundToText({
+        stopRec: true,
+        logging: logging,
+        loadingElementSelector,
+        resultElementSelector,
       });
     }
   },
@@ -760,6 +603,157 @@ const foundry = {
       return models;
     } catch (err) {
       console.error(err);
+    }
+  },
+  popup: async function (type, logging = true) {
+    //If not file input had already been created, create a new one
+    if (!document.querySelector("#df_hiddenFileInput")) {
+      document.body.innerHTML += `<input type="file" id="df_hiddenFileInput" style="display: none;" onchange=""></input>`;
+    }
+
+    //If types audio / image have been selected, add 'accept' attribute and set to the correct value
+    //If no type has been provided, remove this attribute, as it may have been set previously
+    if (type === "audio" || type === "sound") {
+      document
+        .querySelector("#df_hiddenFileInput")
+        .setAttribute("accept", "audio/*");
+    } else if (type === "image") {
+      document
+        .querySelector("#df_hiddenFileInput")
+        .setAttribute("accept", "image/*");
+    } else {
+      document.querySelector("#df_hiddenFileInput").removeAttribute("accept");
+    }
+
+    //Activate the file input.
+    document.querySelector("#df_hiddenFileInput").click();
+
+    try {
+      let file = await df_waitForFileSelection();
+      return file;
+    } catch (err) {
+      console.error(err);
+    }
+
+    function df_waitForFileSelection() {
+      return new Promise((resolve, reject) => {
+        const fileInput = document.querySelector("#df_hiddenFileInput");
+
+        //Check if file input exists
+        if (!fileInput) {
+          reject(new Error("File input element not found"));
+          return;
+        }
+
+        //Event listener for file selection
+        fileInput.onchange = async function (event) {
+          const files = event.target.files;
+
+          if (files && files.length > 0) {
+            const selectedFile = files[0];
+            if (logging) {
+              console.log("File selected:", selectedFile);
+            }
+
+            if (selectedFile.type.startsWith("image/")) {
+              try {
+                let image = await foundry.processImage(selectedFile, logging);
+                resolve(image);
+              } catch (error) {
+                reject(new Error("Error during image processing"));
+              }
+            } else {
+              resolve(selectedFile);
+            }
+          }
+        };
+      });
+    }
+  },
+  processImage: async function (source, logging = true) {
+    return new Promise((resolve, reject) => {
+      //if the source is a File (Blob), use FileReader
+      if (source instanceof File) {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+          const img = new Image();
+          img.src = e.target.result;
+
+          img.onload = async function () {
+            let processedImage = await df_processImageLogic(img);
+            resolve(processedImage);
+          };
+
+          img.onerror = function () {
+            reject(new Error("Error loading image from file"));
+          };
+        };
+
+        reader.onerror = function () {
+          reject(new Error("Error reading the image file"));
+        };
+
+        //Start reading the file as a Data URL
+        reader.readAsDataURL(source);
+      }
+      //if the source is a URL, directly process the image
+      else if (typeof source === "string") {
+        const img = new Image();
+        img.crossOrigin = "Anonymous"; //Handle CORS if necessary
+        img.src = source;
+
+        img.onload = async function () {
+          let processedImage = await df_processImageLogic(img);
+          resolve(processedImage);
+        };
+
+        img.onerror = function () {
+          reject(new Error("Error loading image from URL"));
+        };
+      } else {
+        reject(new Error("Invalid image source"));
+      }
+    });
+
+    function df_processImageLogic(img) {
+      return new Promise((resolve) => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        //Reduce the image size
+        const maxWidth = 800;
+        const maxHeight = 800;
+
+        let width = img.width;
+        let height = img.height;
+
+        //Maintain aspect ratio
+        if (width > height) {
+          if (width > maxWidth) {
+            height *= maxWidth / width;
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width *= maxHeight / height;
+            height = maxHeight;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        ctx.drawImage(img, 0, 0, width, height); //Draw the image onto the canvas
+
+        // Get the data URL
+        const processedImage = canvas.toDataURL("image/jpeg", 0.5); //0.5 reduces image quality to decrease the prompt length
+        if (logging) {
+          console.log("Image processed.");
+          console.log(processedImage);
+        }
+        resolve(processedImage);
+      });
     }
   },
 };
