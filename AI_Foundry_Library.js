@@ -741,6 +741,10 @@ const foundry = {
     }
   },
   models: async function (api_token) {
+    if (!api_token) {
+      console.error("No api token provided!");
+      return "No api token provided!";
+    }
     try {
       const response = await fetch("https://data.id.tue.nl/v1/models", {
         method: "GET",
@@ -758,5 +762,4 @@ const foundry = {
       console.error(err);
     }
   },
-  messageHistory: [],
 };
