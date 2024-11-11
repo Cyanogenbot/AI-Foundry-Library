@@ -134,7 +134,7 @@ Function to make requests to sound-to-text models. Three types are available: fi
 async function example() {
 
       let selectedAudio = await foundry.fileSelector('audio')
-      let result = await foundry.soundToText({ api_token: api_token, type: 'file', file: selectedAudio })
+      let result = await foundry.soundToText({ api_token: 'df_abc123...=', type: 'file', file: selectedAudio })
 
     }
 ```
@@ -144,8 +144,8 @@ Here, the user is first asked to select an audio file. Then, this file is sent t
 ```
 async function example() {
 
-      let result = await foundry.soundToText({ api_token: api_token, type: 'record', resultElementSelector: '#resultDiv', sliceDuration: 2500 })
-      setTimeout(async () => { result = await foundry.stopRec({ api_token: api_token })}, 20000)
+      let result = await foundry.soundToText({ api_token: 'df_abc123...=', type: 'record', resultElementSelector: '#resultDiv', sliceDuration: 2500 })
+      setTimeout(async () => { result = await foundry.stopRec({ api_token: 'df_abc123...=' })}, 20000)
 
     }
 ```
