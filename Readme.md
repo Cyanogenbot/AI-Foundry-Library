@@ -80,7 +80,9 @@ Function to generate speech from text. Parameters:
 
 `let result = await foundry.textToSound({api_token: 'df_abc123...=', projectId: 0000, prompt: 'Hi, I am a tall man in a wild west saloon'})`
 
-This line, which must be placed in an asynchronous function (`async function example() {...}`), waits until `textToSound()` has 'spoken' the prompt. The link to this audio file is assigned to the `result` variable. Adding `resultElementSelector: '#audioElement'` would assign this link to the source of an html audio element (`<audio controls></audio>`) with the `audioElement` id. Total code:
+This line, which must be placed in an asynchronous function (`async function example() {...}`), waits until `textToSound()` has 'spoken' the prompt. The link to this audio file is assigned to the `result` variable.
+
+Adding `resultElementSelector: '#audioElement'` would assign this link to the source of an html audio element (`<audio controls></audio>`) with the `audioElement` id. Total code:
 
 ```
 <audio controls id="audioElement"></audio>
@@ -110,11 +112,9 @@ Function to make requests to image-to-text models. Parameters:
 
 ```
 async function example() {
-
       let selectedImage = await foundry.fileSelector('image')
       let result = await foundry.imageToText({ api_token: 'df_abc123...=', image: selectedImage, prompt: 'describe this image' })
-
-    }
+}
 ```
 
 Here, the user is first asked to select an image file. Then, this file is sent to AI, which responds with a description of the image.
@@ -135,22 +135,18 @@ Function to make requests to sound-to-text models. Three types are available: fi
 
 ```
 async function example() {
-
       let selectedAudio = await foundry.fileSelector('audio')
       let result = await foundry.soundToText({ api_token: 'df_abc123...=', type: 'file', file: selectedAudio })
-
-    }
+}
 ```
 
 Here, the user is first asked to select an audio file. Then, this file is sent to AI, which transcribes the audio.
 
 ```
 async function example() {
-
       let result = await foundry.soundToText({ api_token: 'df_abc123...=', type: 'record', resultElementSelector: '#resultDiv', sliceDuration: 2500 })
       setTimeout(async () => { result = await foundry.stopRec({ api_token: 'df_abc123...=' })}, 20000)
-
-    }
+}
 ```
 
 Here, the microphone starts recording and transcribes the recorded audio in sliced of 2.5 seconds. After 20 seconds, `stopRec` is called to stop the recording and transcribe the recording as a whole for better results. During the recording, the created transcription is placed every 2.5 seconds in the html element with id `resultDiv`. The result of stopRec is in this example not placed on screen, but that can be achieved similarly by adding the `resultElementSelector` parameter to `stopRec()` as well.
