@@ -33,7 +33,7 @@ Function to make requests to text-to-text models. Whenever both the prompt param
 - prompt: Parameter for quick prompting
 - messages: Messages array for more complex promping, such as including system prompt. `[{role: "system", content: 'You are an Arduino expert',},{role: "user", content: 'How do I let the build-in LED blink?',}]`
 - temperature: (default = 0.9)
-- maxTokens: (default = 250)
+- max_tokens: (default = 250)
 - logging: (default = true)
 - loadingElementSelector: Selector of HTML element that will be given a loading indicator attribute
 - resultElementSelector: Selector of HTML element that will be used to place AI response in
@@ -74,7 +74,7 @@ Function to make requests to image-to-text models. Images can be provided in the
 - systemPrompt: System prompt
 - image: Image file that will be sent to the AI. Image files selected from an HTML input and online image URLs both work.
 - temperature: (default = 0.9)
-- maxTokens: (default = 250)
+- max_tokens: (default = 250)
 - logging: (default = true)
 - loadingElementSelector: Selector of HTML element that will be given a loading indicator attribute
 - resultElementSelector: Selector of HTML element that will be used to place AI response in

@@ -6,7 +6,7 @@ const foundry = {
     prompt,
     messages,
     temperature = 0.9,
-    maxTokens = 250,
+    max_tokens = 250,
     logging = true,
     loadingElementSelector,
     resultElementSelector,
@@ -58,7 +58,7 @@ const foundry = {
           messages: messages,
           model: model,
           temperature: temperature,
-          max_tokens: maxTokens,
+          max_tokens: max_tokens,
         }),
       });
 
@@ -262,7 +262,7 @@ const foundry = {
     systemPrompt,
     image,
     temperature = 0.9,
-    maxTokens = 250,
+    max_tokens = 250,
     logging = true,
     loadingElementSelector,
     resultElementSelector,
@@ -321,7 +321,7 @@ const foundry = {
           messages: messages,
           model: model,
           temperature: temperature,
-          max_tokens: maxTokens,
+          max_tokens: max_tokens,
         }),
       });
 
