@@ -38,6 +38,11 @@ Function to make requests to text-to-text models. Whenever both the prompt param
 - loadingElementSelector: Selector of HTML element that will be given a loading indicator attribute
 - resultElementSelector: Selector of HTML element that will be used to place AI response in
 
+###### Example
+
+`let result = await foundry.textToText({ api_token: 'df_abc123...=', prompt: 'Tell me about the wild west', max_tokens: 750, temperature: 1.0, resultElementSelector: '#resultDiv' })`
+This line, which must be placed in an asynchronous function (`async function example() {...}`), waits until `textToText()` has created a result, which is then assigned to the `result` variable. In addition, it is placed on screen inside of the div element with id `resultDiv`.
+
 #### foundry.textToImage({})
 
 Function to make requests to text-to-image models. Parameters:
@@ -52,6 +57,11 @@ Function to make requests to text-to-image models. Parameters:
 - width: (default = 512) Image width
 - height: (default = 512) Image height
 
+###### Example
+
+`let result = await foundry.textToImage({ api_token: 'df_abc123...=', prompt: 'A tall man in a wild west saloon', steps: 25 })`
+This line, which must be placed in an asynchronous function (`async function example() {...}`), waits until `textToImage()` has created an image. The link to this image is assigned to the `result` variable.
+
 #### foundry.textToSound({})
 
 Function to generate speech from text. Parameters:
@@ -64,9 +74,23 @@ Function to generate speech from text. Parameters:
 - language: (default 'en') Chosen language, options are 'en', 'nl', 'de' and more
 - logging: (default = true)
 
+###### Example
+
+`let result = await foundry.textToSound({api_token: 'df_abc123...=', projectId: 0000, prompt: 'Hi, I am a tall man in a wild west saloon'})`
+This line, which must be placed in an asynchronous function (`async function example() {...}`), waits until `textToSound()` has 'spoken' the prompt. The link to this audio file is assigned to the `result` variable. Adding `resultElementSelector: '#audioElement'` would assign this link to the source of an html audio element (`<audio controls></audio>`) with the `audioElement` id. Total code:
+
+```
+<audio controls id="audioElement"></audio>
+<script>
+async function example() {
+    let result = await foundry.textToSound({ api_token: `df_abc123...=`, projectId: 0000, prompt: 'Hi, I am a tall man in a wild west saloon', resultElementSelector: '#audioElement' })
+}
+</script>
+```
+
 #### foundry.imageToText({})
 
-Function to make requests to image-to-text models. Images can be provided in the prompt (using an online image URL or file path) or can be automatically asked to be uploaded by the user by setting popup to true. Parameters:
+Function to make requests to image-to-text models. Parameters:
 
 - api_token: Data Foundry API Key
 - model: Chosen AI model. Default model applies
@@ -79,6 +103,19 @@ Function to make requests to image-to-text models. Images can be provided in the
 - loadingElementSelector: Selector of HTML element that will be given a loading indicator attribute
 - resultElementSelector: Selector of HTML element that will be used to place AI response in
 
+###### Example
+
+```
+async function example() {
+
+      let selectedImage = await foundry.fileSelector('image')
+      let result = await foundry.imageToText({ api_token: 'df_abc123...=', image: selectedImage, prompt: 'describe this image' })
+
+    }
+```
+
+Here, the user is first asked to select an image file. Then, this file is sent to AI, which responds with a description of the image.
+
 #### foundry.soundToText({})
 
 Function to make requests to sound-to-text models. Three types are available: file, record, and popup. The file type will transcribe the provided audio file. The record type will record audio and transcribe this live. The popup type will automatically ask for the user to upload an audio file that will be transcribed. Parameters:
@@ -90,6 +127,30 @@ Function to make requests to sound-to-text models. Three types are available: fi
 - loadingElementSelector: Selector of HTML element that will be given a loading indicator attribute when the AI is working
 - resultElementSelector: Selector of HTML element that will be used to place AI response in
 - logging: (default = true)
+
+###### Examples
+
+```
+async function example() {
+
+      let selectedAudio = await foundry.fileSelector('audio')
+      let result = await foundry.soundToText({ api_token: api_token, type: 'file', file: selectedAudio })
+
+    }
+```
+
+Here, the user is first asked to select an audio file. Then, this file is sent to AI, which transcribes the audio.
+
+```
+async function example() {
+
+      let result = await foundry.soundToText({ api_token: api_token, type: 'record', resultElementSelector: '#resultDiv', sliceDuration: 2500 })
+      setTimeout(async () => { result = await foundry.stopRec({ api_token: api_token })}, 20000)
+
+    }
+```
+
+Here, the microphone starts recording and transcribes the recorded audio in sliced of 2.5 seconds. After 20 seconds, `stopRec` is called to stop the recording and transcribe the recording as a whole for better results. During the recording, the created transcription is placed every 2.5 seconds in the html element with id `resultDiv`. The result of stopRec is in this example not placed on screen, but that can be achieved similarly by adding the `resultElementSelector` parameter to `stopRec()` as well.
 
 #### foundry.stopRec()
 
