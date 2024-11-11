@@ -2,6 +2,7 @@ const foundry = {
   textToText: async function ({
     api_token,
     model = "hermes-2-pro-llama-3-8b",
+    server = "https://data.id.tue.nl",
     prompt,
     messages,
     temperature = 0.9,
@@ -47,22 +48,19 @@ const foundry = {
         }
       }
       //Send messages to LocalAI
-      const response = await fetch(
-        "https://data.id.tue.nl/v1/chat/completions",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${api_token}`,
-          },
-          body: JSON.stringify({
-            messages: messages,
-            model: model,
-            temperature: temperature,
-            max_tokens: maxTokens,
-          }),
-        }
-      );
+      const response = await fetch(`${server}/v1/chat/completions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${api_token}`,
+        },
+        body: JSON.stringify({
+          messages: messages,
+          model: model,
+          temperature: temperature,
+          max_tokens: maxTokens,
+        }),
+      });
 
       //Wait for LocalAI response
       const json = await response.json();
@@ -97,6 +95,7 @@ const foundry = {
   },
   textToImage: async function ({
     api_token,
+    server = "https://data.id.tue.nl",
     prompt,
     temperature = 0.9,
     logging = true,
@@ -128,23 +127,20 @@ const foundry = {
       }
 
       //Make AI request
-      const response = await fetch(
-        "https://data.id.tue.nl/v1/images/generations",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${api_token}`,
-          },
-          body: JSON.stringify({
-            prompt: prompt,
-            steps: steps,
-            width: width,
-            height: height,
-            temperature: temperature,
-          }),
-        }
-      );
+      const response = await fetch(`${server}/v1/images/generations`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${api_token}`,
+        },
+        body: JSON.stringify({
+          prompt: prompt,
+          steps: steps,
+          width: width,
+          height: height,
+          temperature: temperature,
+        }),
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -182,6 +178,7 @@ const foundry = {
   },
   textToSound: async function ({
     api_token,
+    server = "https://data.id.tue.nl",
     projectId,
     prompt,
     language = "en",
@@ -218,20 +215,17 @@ const foundry = {
     }
 
     try {
-      const response = await fetch(
-        `https://data.id.tue.nl/api/vendor/t2s/${projectId}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            api_token: api_token,
-            lang: language,
-            text: prompt,
-          }),
-        }
-      );
+      const response = await fetch(`${server}/api/vendor/t2s/${projectId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          api_token: api_token,
+          lang: language,
+          text: prompt,
+        }),
+      });
       const json = await response.json();
       const audioLink = "https://data.id.tue.nl/api/vendor/t2s/" + json.text;
       if (logging) {
@@ -263,6 +257,7 @@ const foundry = {
   imageToText: async function ({
     api_token,
     model = "llava-llama-3-8b-v1_1",
+    server = "https://data.id.tue.nl",
     prompt,
     systemPrompt,
     image,
@@ -316,22 +311,19 @@ const foundry = {
         }
       }
       //Send messages to LocalAI
-      const response = await fetch(
-        "https://data.id.tue.nl/v1/chat/completions",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${api_token}`,
-          },
-          body: JSON.stringify({
-            messages: messages,
-            model: model,
-            temperature: temperature,
-            max_tokens: maxTokens,
-          }),
-        }
-      );
+      const response = await fetch(`${server}/v1/chat/completions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${api_token}`,
+        },
+        body: JSON.stringify({
+          messages: messages,
+          model: model,
+          temperature: temperature,
+          max_tokens: maxTokens,
+        }),
+      });
 
       //Wait for LocalAI response
       const json = await response.json();
@@ -367,6 +359,7 @@ const foundry = {
   },
   soundToText: async function ({
     api_token,
+    server = "https://data.id.tue.nl",
     type = "file", //'file' or 'record'
     sliceDuration = 5000, //miliseconds
     file, //The audio file that needs to be transcribed
@@ -496,16 +489,13 @@ const foundry = {
           }
         }
         //Make request
-        const response = await fetch(
-          "https://data.id.tue.nl/v1/audio/transcriptions",
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${api_token}`,
-            },
-            body: formData,
-          }
-        );
+        const response = await fetch(`${server}/v1/audio/transcriptions`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${api_token}`,
+          },
+          body: formData,
+        });
         const result = await response.json(); //It may occur that the reponsonse is not perfect json, leading to errors
         if (logging) {
           //log result
@@ -562,6 +552,7 @@ const foundry = {
   },
   stopRec: async function ({
     api_token,
+    server = "https://data.id.tue.nl",
     logging = true,
     loadingElementSelector,
     resultElementSelector,
@@ -589,7 +580,7 @@ const foundry = {
       return "No api token provided!";
     }
     try {
-      const response = await fetch("https://data.id.tue.nl/v1/models", {
+      const response = await fetch(`${server}/v1/models`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -605,7 +596,7 @@ const foundry = {
       console.error(err);
     }
   },
-  popup: async function (type, logging = true) {
+  fileSelector: async function (type, logging = true) {
     //If not file input had already been created, create a new one
     if (!document.querySelector("#df_hiddenFileInput")) {
       document.body.innerHTML += `<input type="file" id="df_hiddenFileInput" style="display: none;" onchange=""></input>`;

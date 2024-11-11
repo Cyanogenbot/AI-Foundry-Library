@@ -34,7 +34,7 @@
     //Create example function
     async function example() {
       //Ask user to upload image
-      let imageFile = await foundry.popup('image')
+      let imageFile = await foundry.fileSelector('image')
 
       //then describe the image
       let result1 = await foundry.imageToText({

@@ -98,7 +98,7 @@ Function to make requests to sound-to-text models. Three types are available: fi
 - loadingElementSelector: Selector of HTML element that will be given a loading indicator attribute
 - resultElementSelector: Selector of HTML element that will be used to place AI response in
 
-#### foundry.popup()
+#### foundry.fileSelector()
 
 Function to ask for a file using a file popup. It is possible to only allow either audio or image files, which is adviced to prevent erorrs. This function automatically pre-processes images. Parameters are not placed inside an object. Parameters:
 
