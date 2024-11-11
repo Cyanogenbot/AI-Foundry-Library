@@ -41,6 +41,7 @@ Function to make requests to text-to-text models. Whenever both the prompt param
 ###### Example
 
 `let result = await foundry.textToText({ api_token: 'df_abc123...=', prompt: 'Tell me about the wild west', max_tokens: 750, temperature: 1.0, resultElementSelector: '#resultDiv' })`
+
 This line, which must be placed in an asynchronous function (`async function example() {...}`), waits until `textToText()` has created a result, which is then assigned to the `result` variable. In addition, it is placed on screen inside of the div element with id `resultDiv`.
 
 #### foundry.textToImage({})
@@ -60,6 +61,7 @@ Function to make requests to text-to-image models. Parameters:
 ###### Example
 
 `let result = await foundry.textToImage({ api_token: 'df_abc123...=', prompt: 'A tall man in a wild west saloon', steps: 25 })`
+
 This line, which must be placed in an asynchronous function (`async function example() {...}`), waits until `textToImage()` has created an image. The link to this image is assigned to the `result` variable.
 
 #### foundry.textToSound({})
@@ -77,6 +79,7 @@ Function to generate speech from text. Parameters:
 ###### Example
 
 `let result = await foundry.textToSound({api_token: 'df_abc123...=', projectId: 0000, prompt: 'Hi, I am a tall man in a wild west saloon'})`
+
 This line, which must be placed in an asynchronous function (`async function example() {...}`), waits until `textToSound()` has 'spoken' the prompt. The link to this audio file is assigned to the `result` variable. Adding `resultElementSelector: '#audioElement'` would assign this link to the source of an html audio element (`<audio controls></audio>`) with the `audioElement` id. Total code:
 
 ```
