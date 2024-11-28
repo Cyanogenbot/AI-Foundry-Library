@@ -667,6 +667,48 @@ const foundry = {
       });
     }
   },
+  transcribeRecording: async function ({
+    api_token,
+    server,
+    model,
+    sliceDuration,
+    resultElementSelector,
+    loadingElementSelector,
+    logging,
+    stopRec,
+  }) {
+    return await foundry.soundToText({
+      api_token,
+      server,
+      model,
+      type: "record",
+      sliceDuration,
+      resultElementSelector,
+      loadingElementSelector,
+      logging,
+      stopRec,
+    });
+  },
+  transcribeFile: async function ({
+    api_token,
+    server,
+    model,
+    file,
+    resultElementSelector,
+    loadingElementSelector,
+    logging,
+  }) {
+    return await foundry.soundToText({
+      api_token,
+      server,
+      model,
+      type: "file",
+      file,
+      resultElementSelector,
+      loadingElementSelector,
+      logging,
+    });
+  },
   processImage: async function (source, logging = true) {
     return new Promise((resolve, reject) => {
       //if the source is a File (Blob), use FileReader
