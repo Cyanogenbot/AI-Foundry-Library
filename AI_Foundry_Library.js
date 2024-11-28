@@ -560,6 +560,7 @@ const foundry = {
     if (api_token) {
       return await foundry.soundToText({
         api_token: api_token,
+        server,
         stopRec: true,
         logging: logging,
         loadingElementSelector,
@@ -568,6 +569,7 @@ const foundry = {
     } else {
       return await foundry.soundToText({
         stopRec: true,
+        server,
         logging: logging,
         loadingElementSelector,
         resultElementSelector,
