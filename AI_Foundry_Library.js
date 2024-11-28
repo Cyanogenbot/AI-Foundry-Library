@@ -360,6 +360,7 @@ const foundry = {
   soundToText: async function ({
     api_token,
     server = "https://data.id.tue.nl",
+    model = '"whisper-base"',
     type = "file", //'file' or 'record'
     sliceDuration = 5000, //miliseconds
     file, //The audio file that needs to be transcribed
@@ -392,6 +393,7 @@ const foundry = {
     if (type === "file") {
       return await df_transcribe({
         api_token: api_token,
+        model: model,
         file: file,
       });
     }
@@ -421,6 +423,7 @@ const foundry = {
                 //Add the result to transcription variable
                 transcription += await df_transcribe({
                   api_token: api_token,
+                  model: model,
                   file: blob,
                 });
 
@@ -455,6 +458,7 @@ const foundry = {
           if (api_token) {
             completeTranscription = await df_transcribe({
               api_token: api_token,
+              model: model,
               file: blob,
               type: "file",
             });
@@ -471,7 +475,7 @@ const foundry = {
       });
     }
     //This function is used to transcribe audio. It will return text.
-    async function df_transcribe({ model = "whisper-base", file }) {
+    async function df_transcribe({ model, file }) {
       //Create FormData object and append the file and other parameters
       const formData = new FormData();
       formData.append("model", model); //Add model
