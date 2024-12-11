@@ -360,7 +360,7 @@ const foundry = {
   soundToText: async function ({
     api_token,
     server = "https://data.id.tue.nl",
-    model = '"whisper-base"',
+    model = 'whisper-base',
     type = "file", //'file' or 'record'
     sliceDuration = 5000, //miliseconds
     file, //The audio file that needs to be transcribed
