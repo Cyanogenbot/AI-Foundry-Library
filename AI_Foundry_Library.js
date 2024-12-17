@@ -580,7 +580,7 @@ const foundry = {
       });
     }
   },
-  models: async function (api_token) {
+  models: async function (api_token, server = "https://data.id.tue.nl") {
     if (!api_token) {
       console.error("No api token provided!");
       return "No api token provided!";
