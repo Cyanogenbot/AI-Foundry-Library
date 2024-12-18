@@ -165,13 +165,6 @@ Function to ask for a file using a file popup. It is possible to only allow eith
 - type: `image` or `audio` (`sound` also works). This will only allow either image or audio files to be uploaded
 - logging: (default = true)
 
-#### foundry.processImage()
-
-Function that used to process images for both the popup() and imageToText() function. Parameters:
-
-- source: Image to be processed. This can be both an url to an online image, and a file selected using an html input element.
-- logging: (default = true)
-
 ## Adding a chat history
 
 In order to have the LLM take previous messages into account, it is important to add more messages than just a prompt. In the example below we have first created a messages array that is filled with previous messages. We send this using the `messages` parameter instead of using the `prompt` parameter. When the result is created, we append it to the array so it can be used later. Note that when the array becomes very long, it becomes harder for the AI to take all messages into consideration which can lead to hallucination. To prevent this, you could check the length of the array, and remove the first item when the length is more than a preset value.
