@@ -259,7 +259,6 @@ const foundry = {
     model = "llava-llama-3-8b-v1_1",
     server = "https://data.id.tue.nl",
     prompt,
-    systemPrompt,
     image,
     temperature = 0.9,
     max_tokens = 500,
@@ -283,10 +282,6 @@ const foundry = {
     image = await foundry.processImage(image);
     messages = [
       //Create a message for LocalAI
-      {
-        role: "system",
-        content: systemPrompt,
-      },
       {
         role: "user",
         content: [
