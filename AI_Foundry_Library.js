@@ -180,7 +180,7 @@ const foundry = {
     api_token,
     server = "https://data.id.tue.nl",
     projectId,
-    prompt,
+    text,
     language = "en",
     loadingElementSelector,
     resultElementSelector,
@@ -223,7 +223,7 @@ const foundry = {
         body: JSON.stringify({
           api_token: api_token,
           lang: language,
-          text: prompt,
+          text: text,
         }),
       });
       const json = await response.json();
