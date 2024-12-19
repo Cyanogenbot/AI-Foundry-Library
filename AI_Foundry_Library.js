@@ -386,6 +386,10 @@ const foundry = {
 
     //In file mode, transcribe the provided file without a popup. Can be used if file selection needs to be handled differently.
     if (type === "file") {
+      //if the provided file is a url
+      if (typeof file === "string") {
+        file = await urlToFile(file);
+      }
       return await df_transcribe({
         api_token: api_token,
         model: model,
@@ -394,6 +398,29 @@ const foundry = {
     }
 
     //Helper functions
+
+    async function urlToFile(url) {
+      try {
+        // Fetch the file from the URL
+        const response = await fetch(url);
+
+        // Check if the fetch was successful
+        if (!response.ok) {
+          throw new Error(`Failed to fetch the file: ${response.statusText}`);
+        }
+
+        // Get the file data as a Blob
+        const blob = await response.blob();
+
+        // Create a File object from the Blob
+        const file = new File([blob], "audio", {
+          type: blob.type,
+        });
+        return file;
+      } catch (error) {
+        console.error("Error converting URL to File:", error);
+      }
+    }
 
     function startRecording() {
       //Use RecordRTC library to handle microphone recordings
@@ -495,7 +522,15 @@ const foundry = {
           },
           body: formData,
         });
-        const result = await response.json(); //It may occur that the reponsonse is not perfect json, leading to errors
+        let result;
+        try {
+          result = await response.json();
+        } catch (err) {
+          console.error(
+            "An error occurred during transcription. It is possible the audio file you provided is too large.",
+            err
+          );
+        }
         if (logging) {
           //log result
           console.log("Result:", result.text);
