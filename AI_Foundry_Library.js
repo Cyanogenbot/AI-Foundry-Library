@@ -819,7 +819,6 @@ const foundry = {
         const processedImage = canvas.toDataURL("image/jpeg", 0.5); //0.5 reduces image quality to decrease the prompt length
         if (logging) {
           console.log("Image processed.");
-          console.log(processedImage);
         }
         resolve(processedImage);
       });
