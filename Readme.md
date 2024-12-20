@@ -70,7 +70,7 @@ Function to generate speech from text. Parameters:
 
 - api_token: Data Foundry API Key
 - projectId: Data Foundry Project ID
-- prompt: Text that will be used for speech generation
+- text: Text that will be used for speech generation
 - loadingElementSelector: Selector of HTML element that will be given a loading indicator attribute
 - resultElementSelector: Selector of HTML element that will be used to place AI response in
 - language: (default 'en') Chosen language, options are 'en', 'nl', 'de' and more
@@ -78,9 +78,9 @@ Function to generate speech from text. Parameters:
 
 ###### Example
 
-`let result = await foundry.textToSound({api_token: 'df_abc123...=', projectId: 0000, prompt: 'Hi, I am a tall man in a wild west saloon'})`
+`let result = await foundry.textToSound({api_token: 'df_abc123...=', projectId: 0000, text: 'Hi, I am a tall man in a wild west saloon'})`
 
-This line, which must be placed in an asynchronous function (`async function example() {...}`), waits until `textToSound()` has 'spoken' the prompt. The link to this audio file is assigned to the `result` variable.
+This line, which must be placed in an asynchronous function (`async function example() {...}`), waits until `textToSound()` has 'spoken' the text. The link to this audio file is assigned to the `result` variable.
 
 Adding `resultElementSelector: '#audioElement'` would assign this link to the source of an html audio element (`<audio controls></audio>`) with the `audioElement` id. Total code:
 
@@ -88,7 +88,7 @@ Adding `resultElementSelector: '#audioElement'` would assign this link to the so
 <audio controls id="audioElement"></audio>
 <script>
 async function example() {
-    let result = await foundry.textToSound({ api_token: `df_abc123...=`, projectId: 0000, prompt: 'Hi, I am a tall man in a wild west saloon', resultElementSelector: '#audioElement' })
+    let result = await foundry.textToSound({ api_token: `df_abc123...=`, projectId: 0000, text: 'Hi, I am a tall man in a wild west saloon', resultElementSelector: '#audioElement' })
 }
 </script>
 ```
@@ -100,7 +100,6 @@ Function to make requests to image-to-text models. Parameters:
 - api_token: Data Foundry API Key
 - model: Chosen AI model. Default model applies
 - prompt: Main prompt
-- systemPrompt: System prompt
 - image: Image file that will be sent to the AI. Image files selected from an HTML input and online image URLs both work.
 - temperature: (default = 0.9)
 - max_tokens: (default = 250)
@@ -119,13 +118,12 @@ async function example() {
 
 Here, the user is first asked to select an image file. Then, this file is sent to AI, which responds with a description of the image.
 
-#### foundry.soundToText({})
+#### foundry.transcribeFile({})
 
-Function to make requests to sound-to-text models. Three types are available: file, record, and popup. The file type will transcribe the provided audio file. The record type will record audio and transcribe this live. The popup type will automatically ask for the user to upload an audio file that will be transcribed. Parameters:
+Function to make requests to sound-to-text models to transcribe audio files.
 
 - api_token: Data Foundry API Key
-- type: (default = file) Choose between three types: 'file', or 'record'. 'file' will transcribe the provided audio file. 'record' will record audio and transcribe this live.
-- sliceDuration: (default = 5000) Duration in miliseconds of transcription slices. Only relevant if type is set to 'record'. If so, a new piece of transcription will become available repeatedly at intervals of the set duration. Highter sliceDurations will give better results, but lower speeds.
+- model: Chosen AI model. Default model applies
 - file: Audio file that will be transcribed. Only required if type is set to 'file'
 - loadingElementSelector: Selector of HTML element that will be given a loading indicator attribute when the AI is working
 - resultElementSelector: Selector of HTML element that will be used to place AI response in
@@ -136,24 +134,38 @@ Function to make requests to sound-to-text models. Three types are available: fi
 ```
 async function example() {
       let selectedAudio = await foundry.fileSelector('audio')
-      let result = await foundry.soundToText({ api_token: 'df_abc123...=', type: 'file', file: selectedAudio })
+      let result = await foundry.transcribeFile({ api_token: 'df_abc123...=', type: 'file', file: selectedAudio })
 }
 ```
 
 Here, the user is first asked to select an audio file. Then, this file is sent to AI, which transcribes the audio.
 
+#### foundry.transcribeRecording({})
+
+Function to make requests to sound-to-text models to transcribe and record live audio
+
+- api_token: Data Foundry API Key
+- model: Chosen AI model. Default model applies
+- sliceDuration: (default = 5000) Duration in miliseconds of transcription slices. Only relevant if type is set to 'record'. If so, a new piece of transcription will become available repeatedly at intervals of the set duration. Highter sliceDurations will give better results, but lower speeds.
+- loadingElementSelector: Selector of HTML element that will be given a loading indicator attribute when the AI is working
+- resultElementSelector: Selector of HTML element that will be used to place AI response in
+- logging: (default = true)
+
+###### Examples
+
 ```
 async function example() {
-      let result = await foundry.soundToText({ api_token: 'df_abc123...=', type: 'record', resultElementSelector: '#resultDiv', sliceDuration: 2500 })
+      let result = await foundry.transcribeRecording({ api_token: 'df_abc123...=', type: 'record', resultElementSelector: '#resultDiv', sliceDuration: 2500 })
       setTimeout(async () => { result = await foundry.stopRec({ api_token: 'df_abc123...=' })}, 20000)
 }
 ```
 
 Here, the microphone starts recording and transcribes the recorded audio in sliced of 2.5 seconds. After 20 seconds, `stopRec` is called to stop the recording and transcribe the recording as a whole for better results. During the recording, the created transcription is placed every 2.5 seconds in the html element with id `resultDiv`. The result of stopRec is in this example not placed on screen, but that can be achieved similarly by adding the `resultElementSelector` parameter to `stopRec()` as well.
 
-#### foundry.stopRec()
+#### foundry.stopRec({})
 
 - api_token: Data Foundry API Key. This can be left out, in which case the recorder will stop but not transcription is created of the complete recording (useful for longer audio recordings).
+- model: Chosen AI model. Default model applies
 - logging: (default = true)
 - loadingElementSelector: Selector of HTML element that will be given a loading indicator attribute
 - resultElementSelector: Selector of HTML element that will be used to place AI response in
@@ -177,3 +189,22 @@ async function test() {
       messagesArray.push({ role: "assistant", content: result })
 }
 ```
+
+## Advanced Use
+
+##### Server
+
+All functions that make AI requests allow the `server` parameter, which can be used to change the localAI provider server.
+
+##### OOCSI
+
+For many design projects, it can be useful to add AI functionality to physical prototypes. A great way to do this is using OOCSI. This is a way to send simple messages using wifi from one platform to another. The most basic use would be sending a simple message from one platform (e.g. "now"), and having specific functionality on the other platform that only runs when this exact message is recieved:
+
+```
+if (msg === "now") {
+    foundry.textToText({...})
+}
+```
+
+More information on OOCSI: https://oocsi.id.tue.nl/
+An example of OOCSI and this library working together: https://github.com/jortwi/DCE-iteration-3
